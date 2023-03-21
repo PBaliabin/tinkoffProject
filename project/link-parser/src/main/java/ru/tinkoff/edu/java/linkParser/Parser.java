@@ -11,12 +11,6 @@ public class Parser {
         System.out.println(new Parser().parseLink("https://stackoverflow.com/search?q=unsupported%20link\n"));
     }
 
-    /**
-     * Не знал куда имплементировать класс, чтобы показать, что он работает
-     *
-     * @param link
-     * @return
-     */
     public String parseLink (String link){
 
         List<LinkParser> linkParsers = List.of(new GitHubParser(), new StackOverflowParser());
