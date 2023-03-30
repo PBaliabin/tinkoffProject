@@ -11,7 +11,7 @@ public class Parser {
         System.out.println(new Parser().parseLink("https://stackoverflow.com/search?q=unsupported%20link\n"));
     }
 
-    public String parseLink(String link) {
+    public String parseLink (String link){
 
         List<LinkParser> linkParsers = List.of(new GitHubParser(), new StackOverflowParser());
         String[] linkSplit = link.split("/");
