@@ -8,19 +8,19 @@ import ru.tinkoff.edu.java.bot.dto.ApiErrorResponse;
 import ru.tinkoff.edu.java.bot.exception.BadRequestException;
 
 import java.util.Arrays;
-import java.util.List;
 
 @RestControllerAdvice
 public class ErrorHandler {
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse badRequestException(BadRequestException badRequestException) {
-        ApiErrorResponse apiErrorResponse = badRequestException.getApiErrorResponse();
-        List<String> stackTrace = Arrays
-                .stream(badRequestException.getStackTrace())
-                .map(StackTraceElement::toString)
-                .toList();
-        apiErrorResponse.setStacktrace(stackTrace);
-        return apiErrorResponse;
+        return new ApiErrorResponse("This is bad request response description",
+                "400",
+                "BadRequestException",
+                "Что-то пошло не по плану",
+                Arrays
+                        .stream(badRequestException.getStackTrace())
+                        .map(StackTraceElement::toString)
+                        .toList());
     }
 }

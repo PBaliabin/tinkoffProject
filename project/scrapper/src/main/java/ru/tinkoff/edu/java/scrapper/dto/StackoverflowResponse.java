@@ -1,10 +1,13 @@
 package ru.tinkoff.edu.java.scrapper.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
 public class StackoverflowResponse {
+    @JsonProperty("quota_max")
+    private Integer quotaMax;
 
-    private Integer quota_max;
-    private Integer quota_remaining;
+    @JsonProperty("quota_remaining")
+    private Integer quotaRemaining;
 }

@@ -10,7 +10,6 @@ import ru.tinkoff.edu.java.scrapper.exception.BadRequestException;
 import ru.tinkoff.edu.java.scrapper.exception.NotFoundException;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Hidden
 @RestControllerAdvice
@@ -19,24 +18,26 @@ public class ErrorHandler {
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse badRequestException(BadRequestException badRequestException) {
-        ApiErrorResponse apiErrorResponse = badRequestException.getApiErrorResponse();
-        List<String> stackTrace = Arrays
-                .stream(badRequestException.getStackTrace())
-                .map(StackTraceElement::toString)
-                .toList();
-        apiErrorResponse.setStacktrace(stackTrace);
-        return apiErrorResponse;
+        return new ApiErrorResponse("This is bad request response description",
+                "400",
+                "BadRequestException",
+                "Что-то пошло не по плану",
+                Arrays
+                        .stream(badRequestException.getStackTrace())
+                        .map(StackTraceElement::toString)
+                        .toList());
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiErrorResponse notFoundException(NotFoundException notFoundException) {
-        ApiErrorResponse apiErrorResponse = notFoundException.getApiErrorResponse();
-        List<String> stackTrace = Arrays
-                .stream(notFoundException.getStackTrace())
-                .map(StackTraceElement::toString)
-                .toList();
-        apiErrorResponse.setStacktrace(stackTrace);
-        return apiErrorResponse;
+        return new ApiErrorResponse("This is not found response description",
+                "404",
+                "NotFoundException",
+                "Запрашиваемый элемент не был найден",
+                Arrays
+                        .stream(notFoundException.getStackTrace())
+                        .map(StackTraceElement::toString)
+                        .toList());
     }
 }
