@@ -16,6 +16,7 @@ import ru.tinkoff.edu.java.scrapper.exception.NotFoundException;
 import java.net.URI;
 import java.util.List;
 
+@RequestMapping("/links")
 @RestController
 public class LinkController {
 
@@ -33,7 +34,7 @@ public class LinkController {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = ApiErrorResponse.class))})
     })
-    @GetMapping("/links")
+    @GetMapping()
     public ResponseEntity<ListLinksResponse> getAllLinks(@RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
         int random = (int) (Math.random() * 10);
         random = random % 2;
@@ -63,7 +64,7 @@ public class LinkController {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = ApiErrorResponse.class))})
     })
-    @PostMapping("/links")
+    @PostMapping()
     public ResponseEntity<LinkResponse> addLink(@RequestBody AddLinkRequest link, @RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
         int random = (int) (Math.random() * 10);
         random = random % 2;
@@ -95,7 +96,7 @@ public class LinkController {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = ApiErrorResponse.class))})
     })
-    @DeleteMapping("/links")
+    @DeleteMapping()
     public ResponseEntity<LinkResponse> removeLink(@RequestBody RemoveLinkRequest link, @RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
         int random = (int) (Math.random() * 10);
         random = random % 3;

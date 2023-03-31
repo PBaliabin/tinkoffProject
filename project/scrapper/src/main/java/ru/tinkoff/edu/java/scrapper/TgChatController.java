@@ -6,14 +6,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.scrapper.dto.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.exception.BadRequestException;
 import ru.tinkoff.edu.java.scrapper.exception.NotFoundException;
 
+@RequestMapping("/tg-chat")
 @RestController
 public class TgChatController {
 
@@ -27,7 +25,7 @@ public class TgChatController {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = ApiErrorResponse.class))})
     })
-    @PostMapping("/tg-chat/{id}")
+    @PostMapping("/{id}")
     public void signInChat(@PathVariable long id) {
         int random = (int) (Math.random() * 10);
         random = random % 2;
@@ -54,7 +52,7 @@ public class TgChatController {
                             @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     schema = @Schema(implementation = ApiErrorResponse.class))})
     })
-    @DeleteMapping("/tg-chat/{id}")
+    @DeleteMapping("/{id}")
     public void deleteChat(@PathVariable long id) {
         int random = (int) (Math.random() * 10);
         random = random % 3;
