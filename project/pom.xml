@@ -19,6 +19,7 @@
         <spring-context-indexer.version>6.0.6</spring-context-indexer.version>
         <lombok.version>1.18.24</lombok.version>
         <org.jetbrains.annotations.version>23.1.0</org.jetbrains.annotations.version>
+        <org.springdoc.webmvc-ui.version>2.0.2</org.springdoc.webmvc-ui.version>
     </properties>
 
     <dependencyManagement>
@@ -88,6 +89,20 @@
                 <artifactId>annotations</artifactId>
                 <version>${org.jetbrains.annotations.version}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${org.springdoc.webmvc-ui.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webflux -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>${spring-boot.version}</version>
             </dependency>
 
 
