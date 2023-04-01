@@ -1,4 +1,5 @@
 project/.idea/
+project/bot/src/main/resources/application.yaml
 project/bot/target/
 project/link-parser/target/
 project/scrapper/target/

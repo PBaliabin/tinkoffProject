@@ -20,6 +20,8 @@
         <lombok.version>1.18.24</lombok.version>
         <org.jetbrains.annotations.version>23.1.0</org.jetbrains.annotations.version>
         <org.springdoc.webmvc-ui.version>2.0.2</org.springdoc.webmvc-ui.version>
+        <org.telegram.telegrambots>6.5.0</org.telegram.telegrambots>
+        <ngrok.version>0.7.0</ngrok.version>
     </properties>
 
     <dependencyManagement>
@@ -103,6 +105,18 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-webflux</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.telegram</groupId>
+                <artifactId>telegrambots</artifactId>
+                <version>${org.telegram.telegrambots}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.kilmajster</groupId>
+                <artifactId>ngrok-spring-boot-starter</artifactId>
+                <version>${ngrok.version}</version>
             </dependency>
 
 
