@@ -13,5 +13,4 @@ public class StackOverflowClientService {
     public StackoverflowResponse getQuestion(String questionNumber, String site) {
         return webClient.getQuestion(questionNumber, site);
     }
-
 }

@@ -8,21 +8,17 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.updates.SetWebhook;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.tinkoff.edu.java.bot.LongPollingTelegramBot;
 import ru.tinkoff.edu.java.bot.WebhookTelegramBot;
 
 @Component
 @RequiredArgsConstructor
 public class BotInitializer {
-    private final LongPollingTelegramBot longPollingTelegramBot;
     private final WebhookTelegramBot webhookTelegramBot;
 
     @EventListener({ContextRefreshedEvent.class})
     public void init() throws TelegramApiException {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         try {
-//            telegramBotsApi.registerBot(longPollingTelegramBot);
-//            System.out.println("Running longPollingTelegramBot");
             telegramBotsApi.registerBot(webhookTelegramBot, SetWebhook.builder().url(webhookTelegramBot.getTelegramBotConfig().getWebhookPath()).build());
             System.out.println("Running webhookTelegramBot");
         } catch (TelegramApiException e) {

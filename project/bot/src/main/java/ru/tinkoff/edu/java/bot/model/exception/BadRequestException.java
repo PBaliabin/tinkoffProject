@@ -1,10 +1,10 @@
-package ru.tinkoff.edu.java.bot.exception;
+package ru.tinkoff.edu.java.bot.model.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import ru.tinkoff.edu.java.bot.dto.ApiErrorResponse;
+import ru.tinkoff.edu.java.bot.model.dto.ApiErrorResponse;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

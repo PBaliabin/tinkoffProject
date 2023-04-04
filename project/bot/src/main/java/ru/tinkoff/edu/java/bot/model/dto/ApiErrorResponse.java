@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.dto;
+package ru.tinkoff.edu.java.bot.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

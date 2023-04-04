@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.tinkoff.edu.java.bot.dto.ApiErrorResponse;
-import ru.tinkoff.edu.java.bot.exception.BadRequestException;
+import ru.tinkoff.edu.java.bot.model.dto.ApiErrorResponse;
+import ru.tinkoff.edu.java.bot.model.exception.BadRequestException;
 
 import java.util.Arrays;
 

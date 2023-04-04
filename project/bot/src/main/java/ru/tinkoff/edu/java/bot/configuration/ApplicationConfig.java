@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.validation.annotation.Validated;
-import ru.tinkoff.edu.java.bot.LongPollingTelegramBot;
-import ru.tinkoff.edu.java.bot.WebhookTelegramBot;
 
 @Validated
 @PropertySources({
@@ -18,12 +16,7 @@ import ru.tinkoff.edu.java.bot.WebhookTelegramBot;
 public record ApplicationConfig(@NotNull String test, @NotNull TelegramBotConfig telegramBotConfig) {
 
     @Bean
-    public LongPollingTelegramBot telegramBot() {
-        return new LongPollingTelegramBot(telegramBotConfig);
-    }
-
-    @Bean
-    public WebhookTelegramBot webhookTelegramBot() {
-        return new WebhookTelegramBot(telegramBotConfig);
+    public TelegramBotConfig telegramBotConfig() {
+        return this.telegramBotConfig;
     }
 }
