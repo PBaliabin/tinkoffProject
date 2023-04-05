@@ -1,17 +1,18 @@
-package ru.tinkoff.edu.java.scrapper.client;
+package ru.tinkoff.edu.java.bot;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.edu.java.scrapper.dto.AddLinkRequest;
-import ru.tinkoff.edu.java.scrapper.dto.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.ListLinksResponse;
-import ru.tinkoff.edu.java.scrapper.dto.RemoveLinkRequest;
-import ru.tinkoff.edu.java.scrapper.inteface.ScrapperClient;
+import ru.tinkoff.edu.java.bot.ScrapperClient;
+import ru.tinkoff.edu.java.bot.model.dto.AddLinkRequest;
+import ru.tinkoff.edu.java.bot.model.dto.LinkResponse;
+import ru.tinkoff.edu.java.bot.model.dto.ListLinksResponse;
+import ru.tinkoff.edu.java.bot.model.dto.RemoveLinkRequest;
 
 @Service
 @RequiredArgsConstructor
 public class ScrapperClientService {
+
     private final ScrapperClient scrapperClient;
 
     public ListLinksResponse getAllLinks(long tgChatId) {

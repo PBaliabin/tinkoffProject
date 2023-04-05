@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.inteface;
+package ru.tinkoff.edu.java.bot;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.service.annotation.DeleteExchange;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.PostExchange;
-import ru.tinkoff.edu.java.scrapper.dto.AddLinkRequest;
-import ru.tinkoff.edu.java.scrapper.dto.LinkResponse;
-import ru.tinkoff.edu.java.scrapper.dto.ListLinksResponse;
-import ru.tinkoff.edu.java.scrapper.dto.RemoveLinkRequest;
+import ru.tinkoff.edu.java.bot.model.dto.AddLinkRequest;
+import ru.tinkoff.edu.java.bot.model.dto.LinkResponse;
+import ru.tinkoff.edu.java.bot.model.dto.ListLinksResponse;
+import ru.tinkoff.edu.java.bot.model.dto.RemoveLinkRequest;
 
 public interface ScrapperClient {
 
-    @GetExchange("links")
+    @GetExchange("/links")
     ListLinksResponse getAllLinks(@RequestHeader(value = "Tg-Chat-Id") long tgChatId);
 
     @PostExchange("/links")
