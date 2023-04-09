@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot;
+package ru.tinkoff.edu.java.bot.service.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -9,9 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tinkoff.edu.java.bot.dto.ApiErrorResponse;
-import ru.tinkoff.edu.java.bot.dto.LinkUpdateRequest;
-import ru.tinkoff.edu.java.bot.exception.BadRequestException;
+import ru.tinkoff.edu.java.bot.model.dto.ApiErrorResponse;
+import ru.tinkoff.edu.java.bot.model.dto.LinkUpdateRequest;
+import ru.tinkoff.edu.java.bot.model.exception.BadRequestException;
 
 @RestController
 public class BotController {
