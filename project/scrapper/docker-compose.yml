@@ -29,7 +29,7 @@ services:
       - --password=postgres
       - update
     volumes:
-      - ./migrations:/liquibase/changelog
+      - ./src/main/resources:/liquibase/changelog
     networks:
       - backend
 

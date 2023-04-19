@@ -9,7 +9,6 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -18,11 +17,10 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-@SpringBootTest
 public class LiquibaseIntegrationTest extends IntegrationEnvironment{
 
     @Test
-    public void testingLiquibase() throws LiquibaseException, SQLException, InterruptedException {
+    public void testingLiquibase() throws LiquibaseException, SQLException {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
