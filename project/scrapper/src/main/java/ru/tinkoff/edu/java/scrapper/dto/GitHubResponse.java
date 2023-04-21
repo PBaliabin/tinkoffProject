@@ -9,10 +9,8 @@ public class GitHubResponse {
     private String name;
     @JsonProperty("full_name")
     private String fullName;
-
     @JsonProperty("html_url")
     private String htmlUrl;
-    @JsonProperty("created_at")
-    private String createdAt;
-
+    @JsonProperty("updated_at")
+    private String updatedAt;
 }

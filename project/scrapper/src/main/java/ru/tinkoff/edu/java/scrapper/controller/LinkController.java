@@ -1,10 +1,11 @@
-package ru.tinkoff.edu.java.scrapper;
+package ru.tinkoff.edu.java.scrapper.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +13,18 @@ import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.scrapper.dto.*;
 import ru.tinkoff.edu.java.scrapper.exception.BadRequestException;
 import ru.tinkoff.edu.java.scrapper.exception.NotFoundException;
+import ru.tinkoff.edu.java.scrapper.jdbc.JdbcLinkService;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/links")
 @RestController
+@RequiredArgsConstructor
 public class LinkController {
+
+    private final JdbcLinkService jdbcLinkService;
 
     @Operation(summary = "Получить все отслеживаемые ссылки")
     @ApiResponses(value = {
@@ -36,16 +42,14 @@ public class LinkController {
     })
     @GetMapping()
     public ResponseEntity<ListLinksResponse> getAllLinks(@RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
-        int random = (int) (Math.random() * 10);
-        random = random % 2;
-
-        if (random == 1) {
-            return ResponseEntity.status(HttpStatus.OK).body(new ListLinksResponse(
-                    List.of(
-                            new LinkResponse(1, URI.create("url1")),
-                            new LinkResponse(2, URI.create("url2"))),
-                    2));
-        } else {
+        try {
+            List<LinkResponse> responseList = new ArrayList<>();
+            List<Link> links = (List<Link>) jdbcLinkService.listAll(tgChatId);
+            for (int i = 0; i < links.size(); i++) {
+                responseList.add(i, new LinkResponse(i, new URI(links.get(i).getLink())));
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(new ListLinksResponse(responseList, responseList.size()));
+        } catch (Exception e) {
             throw new BadRequestException();
         }
     }
@@ -66,12 +70,12 @@ public class LinkController {
     })
     @PostMapping()
     public ResponseEntity<LinkResponse> addLink(@RequestBody AddLinkRequest link, @RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
-        int random = (int) (Math.random() * 10);
-        random = random % 2;
-
-        if (random == 1) {
-            return ResponseEntity.ok(new LinkResponse(1, link.getLink()));
-        } else {
+        try {
+            LinkResponse linkToAdd = new LinkResponse(tgChatId, link.getLink());
+            jdbcLinkService.add(tgChatId, linkToAdd.getUrl());
+            System.out.println(1);
+            return ResponseEntity.status(HttpStatus.OK).body(linkToAdd);
+        } catch (BadRequestException e) {
             throw new BadRequestException();
         }
     }
@@ -98,14 +102,13 @@ public class LinkController {
     })
     @DeleteMapping()
     public ResponseEntity<LinkResponse> removeLink(@RequestBody RemoveLinkRequest link, @RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
-        int random = (int) (Math.random() * 10);
-        random = random % 3;
-
-        if (random == 1) {
-            return ResponseEntity.ok(new LinkResponse(1, link.getLink()));
-        } else if (random == 2) {
+        try {
+            LinkResponse linkToRemove = new LinkResponse(tgChatId, link.getLink());
+            jdbcLinkService.remove(tgChatId, linkToRemove.getUrl());
+            return ResponseEntity.status(HttpStatus.OK).body(linkToRemove);
+        } catch (BadRequestException e) {
             throw new BadRequestException();
-        } else {
+        } catch (NotFoundException e) {
             throw new NotFoundException();
         }
     }

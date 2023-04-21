@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LiquibaseIntegrationTest extends IntegrationEnvironment{
+public class LiquibaseIntegrationTest extends IntegrationEnvironment {
 
     @Test
     public void testingLiquibase() throws LiquibaseException, SQLException {
@@ -36,7 +36,7 @@ public class LiquibaseIntegrationTest extends IntegrationEnvironment{
         DatabaseMetaData md = connection.getMetaData();
         ResultSet rs = md.getTables(connection.getCatalog(), "", null, new String[]{"TABLE"});
         HashSet<String> stringsReceived = new HashSet<>();
-        while(rs.next()) {
+        while (rs.next()) {
             stringsReceived.add(rs.getString("TABLE_NAME"));
         }
 

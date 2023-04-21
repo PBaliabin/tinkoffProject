@@ -1,5 +1,7 @@
 package ru.tinkoff.edu.java.linkParser;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class StackOverflowParser implements LinkParser {
@@ -11,12 +13,15 @@ public class StackOverflowParser implements LinkParser {
     private static final int QUESTION_ID_PLACE_NUM = 4;
 
     @Override
-    public Optional<String> parseLink(String[] link) {
+    public Map<String, String> parseLink(String[] link) {
 
         if (!link[DOMAIN_PLACE_NUM].equals(DOMAIN) || !link[CATEGORY_PLACE_NUM].equals(CATEGORY)) {
-            return Optional.empty();
+            return new HashMap<>();
         }
 
-        return link[QUESTION_ID_PLACE_NUM].describeConstable();
+        return Map.of(
+                "domain", DOMAIN,
+                "category", CATEGORY,
+                "questionId", link[QUESTION_ID_PLACE_NUM]);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.support.WebClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import ru.tinkoff.edu.java.scrapper.inteface.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.inteface.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.inteface.TgBotClient;
 
 @Configuration
 public class ClientConfiguration {
@@ -37,5 +38,18 @@ public class ClientConfiguration {
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builder(WebClientAdapter.forClient(client)).build();
 
         return factory.createClient(StackOverflowClient.class);
+    }
+
+    @Bean
+    public TgBotClient tgBotClient(@Value("${telegram-bot-base-url}") String baseUrl) {
+        WebClient client = WebClient.builder()
+                .baseUrl(baseUrl)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builder(WebClientAdapter.forClient(client)).build();
+
+        return factory.createClient(TgBotClient.class);
     }
 }
