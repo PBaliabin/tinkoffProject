@@ -4,3 +4,5 @@ project/bot/target/
 project/link-parser/target/
 project/scrapper/target/
 project/project.iml
+project/scrapper/src/main/java/ru/tinkoff/edu/java/scrapper/domain/jooq/
+project/scrapper-jooq/target/

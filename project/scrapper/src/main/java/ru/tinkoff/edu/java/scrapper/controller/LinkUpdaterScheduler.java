@@ -5,7 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.scrapper.inteface.LinkUpdater;
 
-import java.util.concurrent.TimeUnit;
+import java.sql.Timestamp;
 
 @Component
 @RequiredArgsConstructor
@@ -17,8 +17,7 @@ public class LinkUpdaterScheduler {
     public void update() throws InterruptedException {
         System.out.println("Starting update links");
 //        linkUpdater.update(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
-        linkUpdater.update(System.currentTimeMillis());
-        System.out.println(TimeUnit.DAYS.toMillis(1));
+        linkUpdater.update(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
         System.out.println("Links updated");
     }
 }

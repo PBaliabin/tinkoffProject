@@ -1,5 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.inteface;
 
+import java.time.LocalDateTime;
+
 public interface LinkUpdater {
-    int update(long checkTimeThreshold);
+    int update(LocalDateTime checkTimeThreshold);
 }
