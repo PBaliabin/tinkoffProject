@@ -16,17 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.GithubLink;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatRecord;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.GithubLinkRecord;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.StackoverflowLinkRecord;
-import ru.tinkoff.edu.java.scrapper.dto.GitHubResponse;
-import ru.tinkoff.edu.java.scrapper.dto.StackoverflowResponse;
-import ru.tinkoff.edu.java.scrapper.jooq.JooqChatService;
-import ru.tinkoff.edu.java.scrapper.jooq.JooqGitHubLinkService;
-import ru.tinkoff.edu.java.scrapper.jooq.JooqStackoverflowLinkService;
-import ru.tinkoff.edu.java.scrapper.service.TypeConverter;
+import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
+import ru.tinkoff.edu.java.scrapper.jooq.service.JooqChatService;
+import ru.tinkoff.edu.java.scrapper.jooq.service.JooqGitHubLinkService;
+import ru.tinkoff.edu.java.scrapper.jooq.service.JooqStackoverflowLinkService;
+import ru.tinkoff.edu.java.scrapper.jooq.util.JooqTypeConverter;
 
 import java.net.URI;
 import java.sql.Connection;
@@ -46,7 +44,7 @@ public class JooqLinkTest extends IntegrationEnvironment {
     @Autowired
     private JooqStackoverflowLinkService jooqStackoverflowLinkService;
     @Autowired
-    private TypeConverter typeConverter;
+    private JooqTypeConverter jooqTypeConverter;
     @Autowired
     private GitHubClientService gitHubClientService;
     @Autowired
@@ -56,13 +54,8 @@ public class JooqLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void addStackoverflowLinkTest() {
-        StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion("1642028", "stackoverflow");
         Assertions.assertThat(
-                jooqStackoverflowLinkService.add(
-                        typeConverter.makeStackoverflowLink(
-                                typeConverter.makeStackoverflowLinkRecord(
-                                        "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c",
-                                        stackoverflowResponse))))
+                        jooqStackoverflowLinkService.add(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c")))
                 .isEqualTo(1);
     }
 
@@ -70,27 +63,19 @@ public class JooqLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void updateStackoverflowTest() {
+        jooqStackoverflowLinkService.add(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
         StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion("1642028", "stackoverflow");
-        StackoverflowLink stackoverflowLink = typeConverter.makeStackoverflowLink(
-                typeConverter.makeStackoverflowLinkRecord(
-                        "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c",
-                        stackoverflowResponse));
-        jooqStackoverflowLinkService.add(stackoverflowLink);
-        stackoverflowLink.setAnswerCount(3);
-        jooqStackoverflowLinkService.add(stackoverflowLink);
-        Assertions.assertThat(jooqStackoverflowLinkService.update(stackoverflowLink)).isEqualTo(1);
+        StackoverflowLinkRecord stackoverflowLinkRecord = jooqTypeConverter.makeStackoverflowLinkRecord(
+                "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c",
+                stackoverflowResponse);
+        Assertions.assertThat(jooqStackoverflowLinkService.update(stackoverflowLinkRecord)).isEqualTo(1);
     }
 
     @Test
     @Transactional
     @Rollback
     public void deleteStackoverflowTest() {
-        StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion("1642028", "stackoverflow");
-        StackoverflowLink stackoverflowLink = typeConverter.makeStackoverflowLink(
-                typeConverter.makeStackoverflowLinkRecord(
-                        "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c",
-                        stackoverflowResponse));
-        jooqStackoverflowLinkService.add(stackoverflowLink);
+        jooqStackoverflowLinkService.add(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
         Assertions.assertThat(jooqGitHubLinkService.remove(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"))).isEqualTo(1);
     }
 
@@ -98,30 +83,24 @@ public class JooqLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void getStackoverflowLinkByLastCheckTimeTest() {
+        jooqStackoverflowLinkService.add(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
         StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion("1642028", "stackoverflow");
-        StackoverflowLink stackoverflowLink = typeConverter.makeStackoverflowLink(
-                typeConverter.makeStackoverflowLinkRecord(
-                        "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c",
-                        stackoverflowResponse));
-        jooqStackoverflowLinkService.add(stackoverflowLink);
+        StackoverflowLinkRecord stackoverflowLinkRecord = jooqTypeConverter.makeStackoverflowLinkRecord(
+                "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c",
+                stackoverflowResponse);
 
         List<StackoverflowLinkRecord> links = (List<StackoverflowLinkRecord>) jooqStackoverflowLinkService
                 .getLinksByLastCheckTime(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
 
-        Assertions.assertThat(links).hasSameElementsAs(List.of(new StackoverflowLinkRecord(stackoverflowLink)));
+        Assertions.assertThat(links).hasSameElementsAs(List.of(stackoverflowLinkRecord));
     }
 
     @Test
     @Transactional
     @Rollback
     public void addGithubLinkTest() {
-        GitHubResponse gitHubResponse = gitHubClientService.getRepo("sanyarnd","tinkoff-java-course-2022");;
         Assertions.assertThat(
-                        jooqGitHubLinkService.add(
-                                typeConverter.makeGithubLink(
-                                        typeConverter.makeGithubLinkRecord(
-                                                "https://github.com/sanyarnd/tinkoff-java-course-2022/",
-                                                gitHubResponse))))
+                        jooqGitHubLinkService.add(URI.create("https://github.com/sanyarnd/tinkoff-java-course-2022/")))
                 .isEqualTo(1);
     }
 
@@ -129,27 +108,19 @@ public class JooqLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void updateGithubLinkTest() {
-        GitHubResponse gitHubResponse = gitHubClientService.getRepo("sanyarnd","tinkoff-java-course-2022");
-        GithubLink githubLink = typeConverter.makeGithubLink(
-                typeConverter.makeGithubLinkRecord(
-                        "https://github.com/sanyarnd/tinkoff-java-course-2022/",
-                        gitHubResponse));
-        jooqGitHubLinkService.add(githubLink);
-        githubLink.setForksCount(3);
-        jooqGitHubLinkService.add(githubLink);
-        Assertions.assertThat(jooqGitHubLinkService.update(githubLink)).isEqualTo(1);
+        jooqGitHubLinkService.add(URI.create("https://github.com/sanyarnd/tinkoff-java-course-2022/"));
+        GitHubResponse gitHubResponse = gitHubClientService.getRepo("sanyarnd", "tinkoff-java-course-2022");
+        GithubLinkRecord githubLinkRecord = jooqTypeConverter.makeGithubLinkRecord(
+                "https://github.com/sanyarnd/tinkoff-java-course-2022/",
+                gitHubResponse);
+        Assertions.assertThat(jooqGitHubLinkService.update(githubLinkRecord)).isEqualTo(1);
     }
 
     @Test
     @Transactional
     @Rollback
     public void deleteGithubLinkTest() {
-        GitHubResponse gitHubResponse = gitHubClientService.getRepo("sanyarnd","tinkoff-java-course-2022");
-        GithubLink githubLink = typeConverter.makeGithubLink(
-                typeConverter.makeGithubLinkRecord(
-                        "https://github.com/sanyarnd/tinkoff-java-course-2022/",
-                        gitHubResponse));
-        jooqGitHubLinkService.add(githubLink);
+        jooqGitHubLinkService.add(URI.create("https://github.com/sanyarnd/tinkoff-java-course-2022/"));
         Assertions.assertThat(jooqGitHubLinkService.remove(URI.create("https://github.com/sanyarnd/tinkoff-java-course-2022/"))).isEqualTo(1);
     }
 
@@ -157,40 +128,39 @@ public class JooqLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void getGithubLinkByLastCheckTimeTest() {
-        GitHubResponse gitHubResponse = gitHubClientService.getRepo("sanyarnd","tinkoff-java-course-2022");
-        GithubLink githubLink = typeConverter.makeGithubLink(
-                typeConverter.makeGithubLinkRecord(
-                        "https://github.com/sanyarnd/tinkoff-java-course-2022/",
-                        gitHubResponse));
-        jooqGitHubLinkService.add(githubLink);
+        jooqGitHubLinkService.add(URI.create("https://github.com/sanyarnd/tinkoff-java-course-2022/"));
+        GitHubResponse gitHubResponse = gitHubClientService.getRepo("sanyarnd", "tinkoff-java-course-2022");
+        GithubLinkRecord githubLinkRecord = jooqTypeConverter.makeGithubLinkRecord(
+                "https://github.com/sanyarnd/tinkoff-java-course-2022/",
+                gitHubResponse);
 
         List<GithubLinkRecord> links = (List<GithubLinkRecord>) jooqGitHubLinkService
                 .getLinksByLastCheckTime(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
 
-        Assertions.assertThat(links).hasSameElementsAs(List.of(new GithubLinkRecord(githubLink)));
+        Assertions.assertThat(links).hasSameElementsAs(List.of(githubLinkRecord));
     }
 
     @Test
     @Transactional
     @Rollback
     public void addChatTest() {
-        jooqChatService.register("1");
+        jooqChatService.register(1L);
     }
 
     @Test
     @Transactional
     @Rollback
     public void deleteChatTest() {
-        jooqChatService.register("1");
-        jooqChatService.unregister("1");
+        jooqChatService.register(1L);
+        jooqChatService.unregister(1L);
     }
 
     @Test
     @Transactional
     @Rollback
     public void getAllChatsTest() {
-        ChatRecord chat1 = new ChatRecord("1");
-        ChatRecord chat2 = new ChatRecord("2");
+        ChatRecord chat1 = new ChatRecord(1L);
+        ChatRecord chat2 = new ChatRecord(2L);
         jooqChatService.register(chat1.getChatId());
         jooqChatService.register(chat2.getChatId());
 

@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.GithubLink;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.StackoverflowLink;
+import ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink;
+import ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LinkChangeLog {
-    private String tgChatId;
+    private Long tgChatId;
     private List<GithubLink> outdatedGithubLinks;
     private List<GithubLink> updatedGithubLinks;
     private List<StackoverflowLink> outdatedStackoverflowLinks;

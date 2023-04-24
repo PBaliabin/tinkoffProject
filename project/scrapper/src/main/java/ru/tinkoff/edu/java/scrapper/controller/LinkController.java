@@ -11,18 +11,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatToLinkRecord;
-import ru.tinkoff.edu.java.scrapper.dto.*;
+import ru.tinkoff.edu.java.scrapper.dto.request.AddLinkRequest;
+import ru.tinkoff.edu.java.scrapper.dto.request.RemoveLinkRequest;
+import ru.tinkoff.edu.java.scrapper.dto.response.ApiErrorResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.exception.BadRequestException;
 import ru.tinkoff.edu.java.scrapper.exception.NotFoundException;
-import ru.tinkoff.edu.java.scrapper.inteface.GitHubClient;
-import ru.tinkoff.edu.java.scrapper.inteface.StackOverflowClient;
-import ru.tinkoff.edu.java.scrapper.jooq.JooqChatToLinkService;
-import ru.tinkoff.edu.java.scrapper.jooq.JooqGitHubLinkService;
-import ru.tinkoff.edu.java.scrapper.jooq.JooqStackoverflowLinkService;
-import ru.tinkoff.edu.java.scrapper.service.TypeConverter;
+import ru.tinkoff.edu.java.scrapper.jooq.service.JooqChatToLinkService;
+import ru.tinkoff.edu.java.scrapper.jooq.service.JooqGitHubLinkService;
+import ru.tinkoff.edu.java.scrapper.jooq.service.JooqStackoverflowLinkService;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -37,9 +36,6 @@ public class LinkController {
     private final JooqChatToLinkService jooqChatToLinkService;
     private final JooqGitHubLinkService jooqGitHubLinkService;
     private final JooqStackoverflowLinkService jooqStackoverflowLinkService;
-    private final GitHubClientService gitHubClientService;
-    private final StackOverflowClientService stackOverflowClientService;
-    private final TypeConverter typeConverter;
 
 
     @Operation(summary = "Получить все отслеживаемые ссылки")
@@ -89,22 +85,12 @@ public class LinkController {
         try {
             jooqChatToLinkService.add(tgChatId, link.getLink());
             Map<String, String> parsedLink = Parser.parseLink(link.getLink().toString());
-            switch (parsedLink.get("domain")){
+            switch (parsedLink.get("domain")) {
                 case "github.com" -> {
-                    GitHubResponse gitHubResponse = gitHubClientService.getRepo(parsedLink.get("owner"), parsedLink.get("repository"));
-                    jooqGitHubLinkService.add(
-                            typeConverter.makeGithubLink(
-                                    typeConverter.makeGithubLinkRecord(
-                                            link.getLink().toString(),
-                                            gitHubResponse)));
+                    jooqGitHubLinkService.add(link.getLink());
                 }
                 case "stackoverflow.com" -> {
-                    StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion(parsedLink.get("questionId"), "stackoverflow");
-                    jooqStackoverflowLinkService.add(
-                            typeConverter.makeStackoverflowLink(
-                                    typeConverter.makeStackoverflowLinkRecord(
-                                            link.getLink().toString(),
-                                            stackoverflowResponse)));
+                    jooqStackoverflowLinkService.add(link.getLink());
                 }
             }
             return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(tgChatId, link.getLink()));
@@ -136,8 +122,8 @@ public class LinkController {
     @DeleteMapping()
     public ResponseEntity<LinkResponse> removeLink(@RequestBody RemoveLinkRequest link, @RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
         try {
+            jooqChatToLinkService.remove(tgChatId, link.getLink());
             LinkResponse linkToRemove = new LinkResponse(tgChatId, link.getLink());
-            jooqChatToLinkService.remove(tgChatId, linkToRemove.getUrl());
             return ResponseEntity.status(HttpStatus.OK).body(linkToRemove);
         } catch (BadRequestException e) {
             throw new BadRequestException();

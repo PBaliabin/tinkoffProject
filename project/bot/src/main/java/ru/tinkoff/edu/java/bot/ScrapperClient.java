@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.service.annotation.DeleteExchange;
 import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.PostExchange;
-import ru.tinkoff.edu.java.bot.model.dto.AddLinkRequest;
-import ru.tinkoff.edu.java.bot.model.dto.LinkResponse;
-import ru.tinkoff.edu.java.bot.model.dto.ListLinksResponse;
-import ru.tinkoff.edu.java.bot.model.dto.RemoveLinkRequest;
+import ru.tinkoff.edu.java.bot.model.request.AddLinkRequest;
+import ru.tinkoff.edu.java.bot.model.response.LinkResponse;
+import ru.tinkoff.edu.java.bot.model.response.ListLinksResponse;
+import ru.tinkoff.edu.java.bot.model.request.RemoveLinkRequest;
 
 public interface ScrapperClient {
 

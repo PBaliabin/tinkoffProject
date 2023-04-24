@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.tinkoff.edu.java.scrapper.dto.ApiErrorResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.exception.BadRequestException;
 import ru.tinkoff.edu.java.scrapper.exception.NotFoundException;
-import ru.tinkoff.edu.java.scrapper.jooq.JooqChatService;
+import ru.tinkoff.edu.java.scrapper.jooq.service.JooqChatService;
 
 @RequestMapping("/tg-chat")
 @RestController
@@ -31,7 +31,7 @@ public class TgChatController {
                                     schema = @Schema(implementation = ApiErrorResponse.class))})
     })
     @PostMapping("/{id}")
-    public void signInChat(@PathVariable String id) {
+    public void signInChat(@PathVariable long id) {
         try {
             jooqChatService.register(id);
             System.out.println("Register chat with id = " + id);
@@ -56,7 +56,7 @@ public class TgChatController {
                                     schema = @Schema(implementation = ApiErrorResponse.class))})
     })
     @DeleteMapping("/{id}")
-    public void deleteChat(@PathVariable String id) {
+    public void deleteChat(@PathVariable long id) {
         try {
             jooqChatService.unregister(id);
             System.out.println("Unregister chat with id = " + id);

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import ru.tinkoff.edu.java.bot.model.dto.ApiErrorResponse;
+import ru.tinkoff.edu.java.bot.model.response.ApiErrorResponse;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

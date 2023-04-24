@@ -8,9 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
-import ru.tinkoff.edu.java.scrapper.inteface.GitHubClient;
-import ru.tinkoff.edu.java.scrapper.inteface.StackOverflowClient;
-import ru.tinkoff.edu.java.scrapper.inteface.TgBotClient;
+import ru.tinkoff.edu.java.scrapper.inteface.client.GitHubClient;
+import ru.tinkoff.edu.java.scrapper.inteface.client.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.inteface.client.TgBotClient;
 
 @Configuration
 public class ClientConfiguration {
