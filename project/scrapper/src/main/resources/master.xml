@@ -9,7 +9,5 @@
             http://www.liquibase.org/xml/ns/dbchangelog-ext
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <include file="migrations/Chat.sql"/>
-    <include file="migrations/Link.sql"/>
-    <include file="migrations/ChatToLink.sql"/>
+    <includeAll path="migrations"/>
 </databaseChangeLog>

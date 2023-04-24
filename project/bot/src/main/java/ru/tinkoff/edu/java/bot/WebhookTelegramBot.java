@@ -14,7 +14,10 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.tinkoff.edu.java.bot.configuration.TelegramBotConfig;
+import ru.tinkoff.edu.java.bot.model.dto.LinkChangeLog;
 import ru.tinkoff.edu.java.bot.service.TelegramBotService;
+import ru.tinkoff.edu.java.bot.service.wrapper.GithubLinkWrapper;
+import ru.tinkoff.edu.java.bot.service.wrapper.StackoverflowLinkWrapper;
 
 import java.util.List;
 
@@ -50,6 +53,22 @@ public class WebhookTelegramBot extends TelegramWebhookBot {
             this.buildAndSendTextMessage(chatId, telegramBotService.processMessage(messageText));
         }
         return null;
+    }
+
+    @PostMapping("/update")
+    public void processUpdate(@RequestBody List<LinkChangeLog> linkChangeLogList) {
+        for (LinkChangeLog changelog : linkChangeLogList) {
+            String stringBuilder = "Telegram chat " + changelog.getTgChatId() + " has next updates:\n" +
+                    GithubLinkWrapper.makeMessage(
+                            changelog.getOutdatedGithubLinks(),
+                            changelog.getUpdatedGithubLinks()
+                    ) +
+                    StackoverflowLinkWrapper.makeMessage(
+                            changelog.getOutdatedStackoverflowLinks(),
+                            changelog.getUpdatedStackoverflowLinks()
+                    );
+            System.out.println(stringBuilder);
+        }
     }
 
     private void sendMessage(SendMessage sendMessage) {

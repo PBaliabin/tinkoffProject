@@ -7,6 +7,5 @@ import ru.tinkoff.edu.java.scrapper.dto.StackoverflowResponse;
 
 public interface StackOverflowClient {
     @GetExchange("/questions/{questionNumber}")
-    StackoverflowResponse getQuestion(@PathVariable String questionNumber, @RequestParam("site") String site);
-
+    StackoverflowResponse getQuestion(@PathVariable String questionNumber, @RequestParam(value = "site", defaultValue = "stackoverflow") String site);
 }

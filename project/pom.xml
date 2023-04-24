@@ -26,6 +26,7 @@
         <mockito.version>5.2.0</mockito.version>
         <testcontainers.version>1.15.2</testcontainers.version>
         <liquibase.version>4.20.0</liquibase.version>
+        <org.jooq.version>3.18.3</org.jooq.version>
     </properties>
 
     <dependencyManagement>
@@ -163,7 +164,6 @@
                 <artifactId>spring-boot-starter-jdbc</artifactId>
             </dependency>
 
-
             <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -171,7 +171,48 @@
                 <version>${spring-boot.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jdbc</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
 
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jooq -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jooq</artifactId>
+                <version>${spring-boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jooq</groupId>
+                        <artifactId>jooq</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.jooq/jooq -->
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq</artifactId>
+                <version>${org.jooq.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.jooq/jooq-codegen -->
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen</artifactId>
+                <version>${org.jooq.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.jooq/jooq-meta-extensions-liquibase -->
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-meta-extensions-liquibase</artifactId>
+                <version>${org.jooq.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.jooq/jooq-meta -->
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-meta</artifactId>
+                <version>${org.jooq.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -247,6 +288,9 @@
         </module>
         <module>
             scrapper
+        </module>
+        <module>
+            scrapper-jooq
         </module>
     </modules>
 

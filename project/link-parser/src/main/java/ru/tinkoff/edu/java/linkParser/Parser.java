@@ -1,17 +1,14 @@
 package ru.tinkoff.edu.java.linkParser;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Parser {
-    public static void main(String[] args) {
-        System.out.println(new Parser().parseLink("https://github.com/sanyarnd/tinkoff-java-course-2022/\n"));
-        System.out.println(new Parser().parseLink("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c\n"));
-        System.out.println(new Parser().parseLink("https://stackoverflow.com/search?q=unsupported%20link\n"));
-    }
 
-    public String parseLink(String link) {
+    public static Map<String, String> parseLink(String link) {
 
         List<LinkParser> linkParsers = List.of(new GitHubParser(), new StackOverflowParser());
         String[] linkSplit = link.split("/");
@@ -19,9 +16,8 @@ public class Parser {
         return linkParsers
                 .stream()
                 .map(linkParser -> linkParser.parseLink(linkSplit))
-                .filter(Optional::isPresent)
+                .filter(Predicate.not(Map::isEmpty))
                 .findAny()
-                .flatMap(Function.identity())
                 .orElse(null);
     }
 }
