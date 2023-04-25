@@ -2,14 +2,12 @@ package ru.tinkoff.edu.java.scrapper.jooq.service;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.Chat;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatRecord;
 import ru.tinkoff.edu.java.scrapper.inteface.service.ChatService;
 
 import java.util.Collection;
 
-@Service
 @RequiredArgsConstructor
 public class JooqChatService implements ChatService<ChatRecord> {
 

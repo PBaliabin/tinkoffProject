@@ -1,7 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.jooq.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.linkParser.Parser;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
@@ -20,7 +19,6 @@ import ru.tinkoff.edu.java.scrapper.jooq.util.JooqTypeConverter;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Service
 @RequiredArgsConstructor
 public class JooqLinkUpdater implements LinkUpdater {
 

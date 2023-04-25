@@ -1,6 +1,5 @@
 package ru.tinkoff.edu.java.scrapper.jdbc.util;
 
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink;
 import ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
@@ -11,7 +10,6 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
 public class JdbcTypeConverter {
     public GithubLink makeGithubLink(String link, GitHubResponse gitHubResponse) {
         long newUpdateTime = 0L;

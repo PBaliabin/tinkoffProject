@@ -1,24 +1,22 @@
-package ru.tinkoff.edu.java.scrapper.jooq.util;
+package ru.tinkoff.edu.java.scrapper.jpa.util;
 
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.GithubLink;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.StackoverflowLink;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.GithubLinkRecord;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.StackoverflowLinkRecord;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.DateUtil;
+import ru.tinkoff.edu.java.scrapper.jpa.entity.GithubLink;
+import ru.tinkoff.edu.java.scrapper.jpa.entity.StackoverflowLink;
 
 import java.sql.Timestamp;
 
-public class JooqTypeConverter {
-    public GithubLinkRecord makeGithubLinkRecord(String link, GitHubResponse gitHubResponse) {
+public class JpaTypeConverter {
+    public GithubLink makeGithubLink(String link, GitHubResponse gitHubResponse) {
         long newUpdateTime = 0L;
         try {
             newUpdateTime = DateUtil.provideDateFormat().parse(gitHubResponse.getUpdatedAt()).getTime();
         } catch (Exception e) {
             System.out.println("Error while parsing GitHub Timestamp");
         }
-        return new GithubLinkRecord(
+        return new GithubLink(
                 link,
                 gitHubResponse.getId(),
                 gitHubResponse.getName(),
@@ -30,21 +28,8 @@ public class JooqTypeConverter {
         );
     }
 
-    public GithubLink makeGithubLink(GithubLinkRecord githubLinkRecord) {
-        return new GithubLink(
-                githubLinkRecord.getLink(),
-                githubLinkRecord.getRepositoryId(),
-                githubLinkRecord.getName(),
-                githubLinkRecord.getFullName(),
-                githubLinkRecord.getLastActivityTime(),
-                githubLinkRecord.getForksCount(),
-                githubLinkRecord.getOpenIssuesCount(),
-                githubLinkRecord.getLastCheckTime()
-        );
-    }
-
-    public StackoverflowLinkRecord makeStackoverflowLinkRecord(String link, StackoverflowResponse stackoverflowResponse) {
-        return new StackoverflowLinkRecord(
+    public StackoverflowLink makeStackoverflowLink(String link, StackoverflowResponse stackoverflowResponse) {
+        return new StackoverflowLink(
                 link,
                 stackoverflowResponse.getQuotaMax(),
                 stackoverflowResponse.getQuotaRemaining(),
@@ -55,19 +40,7 @@ public class JooqTypeConverter {
         );
     }
 
-    public StackoverflowLink makeStackoverflowLink(StackoverflowLinkRecord stackoverflowLinkRecord) {
-        return new StackoverflowLink(
-                stackoverflowLinkRecord.getLink(),
-                stackoverflowLinkRecord.getQuotaMax(),
-                stackoverflowLinkRecord.getQuotaRemaining(),
-                stackoverflowLinkRecord.getLastActivityTime(),
-                stackoverflowLinkRecord.getIsAnswered(),
-                stackoverflowLinkRecord.getAnswerCount(),
-                stackoverflowLinkRecord.getLastCheckTime()
-        );
-    }
-
-    public ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink convertJooqGithubLinkToCustom(GithubLink githubLink) {
+    public ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink convertJpaGithubLinkToCustom(GithubLink githubLink) {
         return new ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink(
                 githubLink.getLink(),
                 githubLink.getRepositoryId(),
@@ -80,7 +53,7 @@ public class JooqTypeConverter {
         );
     }
 
-    public ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink convertJooqStackoverflowLinkToCustom(StackoverflowLink stackoverflowLink) {
+    public ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink convertJpaStackoverflowLinkToCustom(StackoverflowLink stackoverflowLink) {
         return new ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink(
                 stackoverflowLink.getLink(),
                 stackoverflowLink.getQuotaMax(),

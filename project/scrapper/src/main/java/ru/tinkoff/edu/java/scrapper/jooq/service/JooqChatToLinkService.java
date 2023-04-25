@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.jooq.service;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatToLinkRecord;
 import ru.tinkoff.edu.java.scrapper.inteface.service.ChatToLinkService;
@@ -10,7 +9,6 @@ import ru.tinkoff.edu.java.scrapper.inteface.service.ChatToLinkService;
 import java.net.URI;
 import java.util.Collection;
 
-@Service
 @RequiredArgsConstructor
 public class JooqChatToLinkService implements ChatToLinkService<ChatToLinkRecord> {
 

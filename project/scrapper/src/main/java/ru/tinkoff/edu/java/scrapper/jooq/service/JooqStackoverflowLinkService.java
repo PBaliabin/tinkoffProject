@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.jooq.service;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.linkParser.Parser;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.StackoverflowLinkRecord;
@@ -15,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 
-@Service
 @RequiredArgsConstructor
 public class JooqStackoverflowLinkService implements StackoverflowLinkService<StackoverflowLinkRecord> {
 

@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.jdbc.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink;
 import ru.tinkoff.edu.java.scrapper.jdbc.mapper.GithubLinkRowMapper;
 import ru.tinkoff.edu.java.scrapper.jdbc.util.JdbcTypeConverter;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
 @RequiredArgsConstructor
 public class JdbcGithubLinkRepository {
 

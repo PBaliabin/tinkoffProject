@@ -1,7 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.jdbc.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.dto.entity.Chat;
 import ru.tinkoff.edu.java.scrapper.dto.entity.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.inteface.service.ChatToLinkService;
@@ -10,7 +9,6 @@ import ru.tinkoff.edu.java.scrapper.jdbc.repository.JdbcChatToLinkRepository;
 import java.net.URI;
 import java.util.Collection;
 
-@Service
 @RequiredArgsConstructor
 public class JdbcChatToLinkService implements ChatToLinkService<ChatToLink> {
     private final JdbcChatToLinkRepository jdbcChatToLinkRepository;

@@ -12,16 +12,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.linkParser.Parser;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatToLinkRecord;
+import ru.tinkoff.edu.java.scrapper.dto.exception.BadRequestException;
+import ru.tinkoff.edu.java.scrapper.dto.exception.NotFoundException;
 import ru.tinkoff.edu.java.scrapper.dto.request.AddLinkRequest;
 import ru.tinkoff.edu.java.scrapper.dto.request.RemoveLinkRequest;
 import ru.tinkoff.edu.java.scrapper.dto.response.ApiErrorResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.ListLinksResponse;
-import ru.tinkoff.edu.java.scrapper.exception.BadRequestException;
-import ru.tinkoff.edu.java.scrapper.exception.NotFoundException;
-import ru.tinkoff.edu.java.scrapper.jooq.service.JooqChatToLinkService;
-import ru.tinkoff.edu.java.scrapper.jooq.service.JooqGitHubLinkService;
-import ru.tinkoff.edu.java.scrapper.jooq.service.JooqStackoverflowLinkService;
+import ru.tinkoff.edu.java.scrapper.inteface.service.ChatToLinkService;
+import ru.tinkoff.edu.java.scrapper.inteface.service.GithubLinkService;
+import ru.tinkoff.edu.java.scrapper.inteface.service.StackoverflowLinkService;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -33,9 +33,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class LinkController {
 
-    private final JooqChatToLinkService jooqChatToLinkService;
-    private final JooqGitHubLinkService jooqGitHubLinkService;
-    private final JooqStackoverflowLinkService jooqStackoverflowLinkService;
+    private final ChatToLinkService chatToLinkService;
+    private final GithubLinkService githubLinkService;
+    private final StackoverflowLinkService stackoverflowLinkService;
 
 
     @Operation(summary = "Получить все отслеживаемые ссылки")
@@ -56,7 +56,7 @@ public class LinkController {
     public ResponseEntity<ListLinksResponse> getAllLinks(@RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
         try {
             List<LinkResponse> responseList = new ArrayList<>();
-            List<ChatToLinkRecord> links = (List<ChatToLinkRecord>) jooqChatToLinkService.getLinksById(tgChatId);
+            List<ChatToLinkRecord> links = (List<ChatToLinkRecord>) chatToLinkService.getLinksById(tgChatId);
             for (int i = 0; i < links.size(); i++) {
                 responseList.add(i, new LinkResponse(i, new URI(links.get(i).getLink())));
             }
@@ -83,14 +83,14 @@ public class LinkController {
     @PostMapping()
     public ResponseEntity<LinkResponse> addLink(@RequestBody AddLinkRequest link, @RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
         try {
-            jooqChatToLinkService.add(tgChatId, link.getLink());
+            chatToLinkService.add(tgChatId, link.getLink());
             Map<String, String> parsedLink = Parser.parseLink(link.getLink().toString());
             switch (parsedLink.get("domain")) {
                 case "github.com" -> {
-                    jooqGitHubLinkService.add(link.getLink());
+                    githubLinkService.add(link.getLink());
                 }
                 case "stackoverflow.com" -> {
-                    jooqStackoverflowLinkService.add(link.getLink());
+                    stackoverflowLinkService.add(link.getLink());
                 }
             }
             return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(tgChatId, link.getLink()));
@@ -122,7 +122,7 @@ public class LinkController {
     @DeleteMapping()
     public ResponseEntity<LinkResponse> removeLink(@RequestBody RemoveLinkRequest link, @RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
         try {
-            jooqChatToLinkService.remove(tgChatId, link.getLink());
+            chatToLinkService.remove(tgChatId, link.getLink());
             LinkResponse linkToRemove = new LinkResponse(tgChatId, link.getLink());
             return ResponseEntity.status(HttpStatus.OK).body(linkToRemove);
         } catch (BadRequestException e) {

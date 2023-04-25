@@ -1,13 +1,13 @@
-package ru.tinkoff.edu.java.scrapper.configuration;
+package ru.tinkoff.edu.java.scrapper.controller;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.tinkoff.edu.java.scrapper.dto.exception.BadRequestException;
+import ru.tinkoff.edu.java.scrapper.dto.exception.NotFoundException;
 import ru.tinkoff.edu.java.scrapper.dto.response.ApiErrorResponse;
-import ru.tinkoff.edu.java.scrapper.exception.BadRequestException;
-import ru.tinkoff.edu.java.scrapper.exception.NotFoundException;
 
 import java.util.Arrays;
 
