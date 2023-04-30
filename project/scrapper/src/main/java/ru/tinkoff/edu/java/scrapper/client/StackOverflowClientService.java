@@ -2,8 +2,8 @@ package ru.tinkoff.edu.java.scrapper.client;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.edu.java.scrapper.dto.StackoverflowResponse;
-import ru.tinkoff.edu.java.scrapper.inteface.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
+import ru.tinkoff.edu.java.scrapper.inteface.client.StackOverflowClient;
 
 @Service
 @RequiredArgsConstructor

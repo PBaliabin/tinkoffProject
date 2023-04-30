@@ -1,3 +1,4 @@
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -24,7 +25,7 @@ abstract class IntegrationEnvironment {
 
     @Configuration
     static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+        public void initialize(@NotNull ConfigurableApplicationContext configurableApplicationContext) {
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
                     configurableApplicationContext,
                     "spring.datasource.url=" + POSTGRE_SQL_CONTAINER.getJdbcUrl(),

@@ -5,9 +5,9 @@ import org.jooq.SQLDialect;
 import org.jooq.conf.RenderQuotedNames;
 import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Chat;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.ChatToLink;
@@ -19,23 +19,14 @@ import java.sql.SQLException;
 @Configuration
 public class DataSourceConfiguration {
     @Bean
-    public DriverManagerDataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource(
-                "jdbc:postgresql://localhost:5432/scrapper",
-                "postgres",
-                "postgres");
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        return dataSource;
-    }
+    public DSLContext dslContext(DataSourceProperties dataSource) throws SQLException {
+        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+        driverManagerDataSource.setDriverClassName(dataSource.getDriverClassName());
+        driverManagerDataSource.setUrl(dataSource.getUrl());
+        driverManagerDataSource.setUsername(dataSource.getUsername());
+        driverManagerDataSource.setPassword(dataSource.getPassword());
 
-    @Bean
-    public NamedParameterJdbcTemplate customJdbcTemplate(DriverManagerDataSource dataSource) {
-        return new NamedParameterJdbcTemplate(dataSource);
-    }
-
-    @Bean
-    public DSLContext dslContext(DriverManagerDataSource dataSource) throws SQLException {
-        return DSL.using(dataSource.getConnection(), SQLDialect.POSTGRES, postgresJooqCustomizer());
+        return DSL.using(driverManagerDataSource.getConnection(), SQLDialect.POSTGRES, postgresJooqCustomizer());
     }
 
     @Bean

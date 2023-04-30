@@ -3,7 +3,7 @@ package ru.tinkoff.edu.java.scrapper.client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.dto.LinkChangeLog;
-import ru.tinkoff.edu.java.scrapper.inteface.TgBotClient;
+import ru.tinkoff.edu.java.scrapper.inteface.client.TgBotClient;
 
 import java.util.List;
 

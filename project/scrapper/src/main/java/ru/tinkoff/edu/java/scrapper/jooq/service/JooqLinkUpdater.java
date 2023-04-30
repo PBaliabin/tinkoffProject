@@ -1,0 +1,112 @@
+package ru.tinkoff.edu.java.scrapper.jooq.service;
+
+import lombok.RequiredArgsConstructor;
+import ru.tinkoff.edu.java.linkParser.Parser;
+import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
+import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
+import ru.tinkoff.edu.java.scrapper.client.TgBotClientService;
+import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.GithubLink;
+import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.StackoverflowLink;
+import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatToLinkRecord;
+import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.GithubLinkRecord;
+import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.StackoverflowLinkRecord;
+import ru.tinkoff.edu.java.scrapper.dto.LinkChangeLog;
+import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
+import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
+import ru.tinkoff.edu.java.scrapper.inteface.LinkUpdater;
+import ru.tinkoff.edu.java.scrapper.jooq.util.JooqTypeConverter;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+@RequiredArgsConstructor
+public class JooqLinkUpdater implements LinkUpdater {
+
+    private final JooqChatToLinkService jooqChatToLinkService;
+    private final JooqGitHubLinkService jooqGitHubLinkService;
+    private final JooqStackoverflowLinkService jooqStackoverflowLinkService;
+
+    private final GitHubClientService gitHubClientService;
+    private final StackOverflowClientService stackOverflowClientService;
+    private final TgBotClientService tgBotClientService;
+
+    private final JooqTypeConverter jooqTypeConverter;
+
+    @Override
+    public int update(LocalDateTime checkTimeThreshold) {
+        List<GithubLinkRecord> githubLinks = (List<GithubLinkRecord>) jooqGitHubLinkService.getLinksByLastCheckTime(checkTimeThreshold);
+        List<StackoverflowLinkRecord> stackoverflowLinks = (List<StackoverflowLinkRecord>) jooqStackoverflowLinkService.getLinksByLastCheckTime(checkTimeThreshold);
+
+        int linksWithUpdateCount = 0;
+        Map<Long, List<GithubLink>> outdatedGithubLinks = new HashMap<>();
+        Map<Long, List<GithubLink>> updatedGithubLinks = new HashMap<>();
+        Map<Long, List<StackoverflowLink>> updatedStackoverflowLinks = new HashMap<>();
+        Map<Long, List<StackoverflowLink>> outdatedStackoverflowLinks = new HashMap<>();
+
+        for (GithubLinkRecord githubLink : githubLinks) {
+            Map<String, String> parsedLink = Parser.parseLink(githubLink.getLink());
+            GitHubResponse gitHubResponse = gitHubClientService.getRepo(parsedLink.get("owner"), parsedLink.get("repository"));
+
+            GithubLinkRecord updatedGithubLink = jooqTypeConverter.makeGithubLinkRecord(githubLink.getLink(), gitHubResponse);
+
+            if (!Objects.equals(githubLink.getForksCount(), updatedGithubLink.getForksCount()) ||
+                    !Objects.equals(githubLink.getOpenIssuesCount(), updatedGithubLink.getOpenIssuesCount())) {
+                List<ChatToLinkRecord> chatsByLink = (List<ChatToLinkRecord>) jooqChatToLinkService.getChatsByLink(githubLink.getLink());
+                for (ChatToLinkRecord chatToLink : chatsByLink) {
+
+                    List<GithubLink> outdatedGithubLinksList = outdatedGithubLinks.getOrDefault(chatToLink.getChatId(), new ArrayList<>());
+                    outdatedGithubLinksList.add(jooqTypeConverter.makeGithubLink(githubLink));
+                    outdatedGithubLinks.put(chatToLink.getChatId(), outdatedGithubLinksList);
+
+                    List<GithubLink> updatedLinksList = updatedGithubLinks.getOrDefault(chatToLink.getChatId(), new ArrayList<>());
+                    updatedLinksList.add(jooqTypeConverter.makeGithubLink(updatedGithubLink));
+                    updatedGithubLinks.put(chatToLink.getChatId(), updatedLinksList);
+                }
+            }
+
+            jooqGitHubLinkService.update(updatedGithubLink);
+            linksWithUpdateCount++;
+        }
+
+        for (StackoverflowLinkRecord stackoverflowLink : stackoverflowLinks) {
+            Map<String, String> parsedLink = Parser.parseLink(stackoverflowLink.getLink());
+            StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion(parsedLink.get("questionId"), "stackoverflow");
+
+            StackoverflowLinkRecord updatedStackoverflowLink = jooqTypeConverter.makeStackoverflowLinkRecord(stackoverflowLink.getLink(), stackoverflowResponse);
+
+            if (!Objects.equals(stackoverflowLink.getIsAnswered(), updatedStackoverflowLink.getIsAnswered()) ||
+                    !Objects.equals(stackoverflowLink.getAnswerCount(), updatedStackoverflowLink.getAnswerCount())) {
+                List<ChatToLinkRecord> chatsByLink = (List<ChatToLinkRecord>) jooqChatToLinkService.getChatsByLink(stackoverflowLink.getLink());
+                for (ChatToLinkRecord chatToLink : chatsByLink) {
+                    List<StackoverflowLink> outdatedStackoverflowLinksList = outdatedStackoverflowLinks.getOrDefault(chatToLink.getChatId(), new ArrayList<>());
+                    outdatedStackoverflowLinksList.add(jooqTypeConverter.makeStackoverflowLink(stackoverflowLink));
+                    outdatedStackoverflowLinks.put(chatToLink.getChatId(), outdatedStackoverflowLinksList);
+
+                    List<StackoverflowLink> updatedStackoverflowLinksList = updatedStackoverflowLinks.getOrDefault(chatToLink.getChatId(), new ArrayList<>());
+                    updatedStackoverflowLinksList.add(jooqTypeConverter.makeStackoverflowLink(updatedStackoverflowLink));
+                    updatedStackoverflowLinks.put(chatToLink.getChatId(), updatedStackoverflowLinksList);
+                }
+
+                jooqStackoverflowLinkService.update(updatedStackoverflowLink);
+                linksWithUpdateCount++;
+            }
+        }
+
+        Set<Long> tgChatIds = outdatedGithubLinks.keySet();
+        List<LinkChangeLog> changeLogs = new ArrayList<>();
+        for (Long tgChatId : tgChatIds) {
+            changeLogs
+                    .add(new LinkChangeLog(
+                            tgChatId,
+                            outdatedGithubLinks.get(tgChatId).stream().map(jooqTypeConverter::convertJooqGithubLinkToCustom).toList(),
+                            updatedGithubLinks.get(tgChatId).stream().map(jooqTypeConverter::convertJooqGithubLinkToCustom).toList(),
+                            outdatedStackoverflowLinks.get(tgChatId).stream().map(jooqTypeConverter::convertJooqStackoverflowLinkToCustom).toList(),
+                            updatedStackoverflowLinks.get(tgChatId).stream().map(jooqTypeConverter::convertJooqStackoverflowLinkToCustom).toList()
+                    ));
+        }
+        tgBotClientService.sendUpdates(changeLogs);
+        return linksWithUpdateCount;
+    }
+
+
+}
