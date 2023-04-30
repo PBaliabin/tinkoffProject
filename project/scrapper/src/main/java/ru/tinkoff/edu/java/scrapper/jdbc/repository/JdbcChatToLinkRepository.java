@@ -16,20 +16,20 @@ public class JdbcChatToLinkRepository {
 
     private NamedParameterJdbcTemplate namedParamJdbcTemplate;
 
-    public int addRow(Chat chat, URI url) {
+    public void addRow(Chat chat, URI url) {
         String sqlQuery = "INSERT INTO chat_to_link VALUES(:link, :chatId)";
         Map<String, Object> map = new HashMap<>();
         map.put("link", url.toString());
         map.put("chatId", chat.getChatId());
-        return namedParamJdbcTemplate.update(sqlQuery, map);
+        namedParamJdbcTemplate.update(sqlQuery, map);
     }
 
-    public int deleteRow(Chat chat, URI url) {
+    public void deleteRow(Chat chat, URI url) {
         String sqlQuery = "DELETE FROM chat_to_link WHERE link = :link AND chat_id = :chatId";
         Map<String, Object> map = new HashMap<>();
         map.put("link", url.toString());
         map.put("chatId", chat.getChatId());
-        return namedParamJdbcTemplate.update(sqlQuery, map);
+        namedParamJdbcTemplate.update(sqlQuery, map);
     }
 
     public List<ChatToLink> getAllLinksByChat(Chat chat) {

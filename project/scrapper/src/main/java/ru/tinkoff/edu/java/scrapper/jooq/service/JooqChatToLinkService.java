@@ -16,13 +16,13 @@ public class JooqChatToLinkService implements ChatToLinkService<ChatToLinkRecord
     private final ru.tinkoff.edu.java.scrapper.domain.jooq.tables.ChatToLink chatToLinkTable;
 
     @Override
-    public int add(long tgChatId, URI url) {
-        return dslContext.insertInto(chatToLinkTable).values(new ChatToLink(url.toString(), tgChatId)).execute();
+    public void add(long tgChatId, URI url) {
+        dslContext.insertInto(chatToLinkTable).values(new ChatToLink(url.toString(), tgChatId)).execute();
     }
 
     @Override
-    public int remove(long tgChatId, URI url) {
-        return dslContext
+    public void remove(long tgChatId, URI url) {
+        dslContext
                 .deleteFrom(chatToLinkTable)
                 .where(chatToLinkTable.LINK.eq(url.toString())
                         .and(chatToLinkTable.CHAT_ID.eq(tgChatId)))

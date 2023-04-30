@@ -7,7 +7,7 @@ import ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.service.StackoverflowLinkService;
 import ru.tinkoff.edu.java.scrapper.jdbc.repository.JdbcStackoverflowLinkRepository;
-import ru.tinkoff.edu.java.scrapper.jdbc.util.JdbcTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jdbc.util.converter.JdbcStackoverflowLinkConverter;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -19,26 +19,26 @@ public class JdbcStackoverflowLinkService implements StackoverflowLinkService<St
 
     private final JdbcStackoverflowLinkRepository jdbcStackoverflowLinkRepository;
     private final StackOverflowClientService stackOverflowClientService;
-    private final JdbcTypeConverter jdbcTypeConverter;
+    private final JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter;
 
     @Override
-    public int add(URI url) {
+    public void add(URI url) {
         Map<String, String> parsedLink = Parser.parseLink(url.toString());
         StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion(parsedLink.get(
                         StackoverflowLinkService.QUESTION_ID),
                 StackoverflowLinkService.SITE_STACKOVERFLOW);
-        StackoverflowLink stackoverflowLink = jdbcTypeConverter.makeStackoverflowLink(url.toString(), stackoverflowResponse);
-        return jdbcStackoverflowLinkRepository.add(stackoverflowLink);
+        StackoverflowLink stackoverflowLink = jdbcStackoverflowLinkConverter.makeStackoverflowLink(url.toString(), stackoverflowResponse);
+        jdbcStackoverflowLinkRepository.add(stackoverflowLink);
     }
 
     @Override
-    public int remove(URI url) {
-        return jdbcStackoverflowLinkRepository.remove(url);
+    public void remove(URI url) {
+        jdbcStackoverflowLinkRepository.remove(url);
     }
 
     @Override
-    public int update(StackoverflowLink stackoverflowLink) {
-        return jdbcStackoverflowLinkRepository.update(stackoverflowLink);
+    public void update(StackoverflowLink stackoverflowLink) {
+        jdbcStackoverflowLinkRepository.update(stackoverflowLink);
     }
 
     @Override

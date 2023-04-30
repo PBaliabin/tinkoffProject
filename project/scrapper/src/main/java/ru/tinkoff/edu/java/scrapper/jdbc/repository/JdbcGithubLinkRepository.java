@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink;
 import ru.tinkoff.edu.java.scrapper.jdbc.mapper.GithubLinkRowMapper;
-import ru.tinkoff.edu.java.scrapper.jdbc.util.JdbcTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jdbc.util.converter.JdbcGithubLinkConverter;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -16,9 +16,9 @@ import java.util.Map;
 public class JdbcGithubLinkRepository {
 
     private final NamedParameterJdbcTemplate namedParamJdbcTemplate;
-    private final JdbcTypeConverter jdbcTypeConverter;
+    private final JdbcGithubLinkConverter jdbcGithubLinkConverter;
 
-    public int add(GithubLink githubLink) {
+    public void add(GithubLink githubLink) {
         String sqlQuery = "INSERT INTO github_link VALUES(" +
                 ":link," +
                 ":repositoryId," +
@@ -28,10 +28,10 @@ public class JdbcGithubLinkRepository {
                 ":forksCount," +
                 ":openIssuesCount," +
                 ":lastCheckTime)";
-        return namedParamJdbcTemplate.update(sqlQuery, jdbcTypeConverter.makeGithubLinkTableQueryMap(githubLink));
+        namedParamJdbcTemplate.update(sqlQuery, jdbcGithubLinkConverter.makeGithubLinkTableQueryMap(githubLink));
     }
 
-    public int update(GithubLink githubLink) {
+    public void update(GithubLink githubLink) {
         String sqlQuery = "UPDATE github_link SET " +
                 "repository_id = :repositoryId," +
                 "name = :name," +
@@ -41,14 +41,14 @@ public class JdbcGithubLinkRepository {
                 "open_issues_count = :openIssuesCount," +
                 "last_check_time = :lastCheckTime" +
                 " WHERE link = :link";
-        return namedParamJdbcTemplate.update(sqlQuery, jdbcTypeConverter.makeGithubLinkTableQueryMap(githubLink));
+        namedParamJdbcTemplate.update(sqlQuery, jdbcGithubLinkConverter.makeGithubLinkTableQueryMap(githubLink));
     }
 
-    public int remove(URI url) {
+    public void remove(URI url) {
         String sqlQuery = "DELETE FROM github_link WHERE link = :link";
         Map<String, Object> map = new HashMap<>();
         map.put("link", url.toString());
-        return namedParamJdbcTemplate.update(sqlQuery, map);
+        namedParamJdbcTemplate.update(sqlQuery, map);
     }
 
     public List<GithubLink> getAll() {

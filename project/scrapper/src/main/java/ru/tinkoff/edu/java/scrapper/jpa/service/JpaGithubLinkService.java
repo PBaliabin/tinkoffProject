@@ -7,39 +7,37 @@ import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.service.GithubLinkService;
 import ru.tinkoff.edu.java.scrapper.jpa.entity.GithubLink;
 import ru.tinkoff.edu.java.scrapper.jpa.repository.JpaGithubLinkRepository;
-import ru.tinkoff.edu.java.scrapper.jpa.util.JpaTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaGithubLinkConverter;
 
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
 public class JpaGithubLinkService implements GithubLinkService<GithubLink> {
     private final JpaGithubLinkRepository jpaGithubLinkRepository;
     private final GitHubClientService gitHubClientService;
-    private final JpaTypeConverter jpaTypeConverter;
+    private final JpaGithubLinkConverter jpaGithubLinkConverter;
 
     @Override
-    public int add(URI url) {
+    public void add(URI url) {
         Map<String, String> parsedLink = Parser.parseLink(url.toString());
         GitHubResponse gitHubResponse = gitHubClientService.getRepo(
                 parsedLink.get(GithubLinkService.OWNER),
                 parsedLink.get(GithubLinkService.REPOSITORY));
-        GithubLink githubLink = jpaTypeConverter.makeGithubLink(url.toString(), gitHubResponse);
-        return List.of(jpaGithubLinkRepository.save(githubLink)).size();
+        GithubLink githubLink = jpaGithubLinkConverter.makeGithubLink(url.toString(), gitHubResponse);
+        jpaGithubLinkRepository.save(githubLink);
     }
 
     @Override
-    public int remove(URI url) {
+    public void remove(URI url) {
         jpaGithubLinkRepository.deleteById(url.toString());
-        return 1;
     }
 
     @Override
-    public int update(GithubLink githubLink) {
-        return List.of(jpaGithubLinkRepository.save(githubLink)).size();
+    public void update(GithubLink githubLink) {
+        jpaGithubLinkRepository.save(githubLink);
     }
 
     @Override

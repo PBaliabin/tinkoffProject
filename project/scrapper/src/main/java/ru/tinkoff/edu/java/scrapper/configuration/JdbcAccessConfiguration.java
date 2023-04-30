@@ -21,15 +21,12 @@ import ru.tinkoff.edu.java.scrapper.jdbc.repository.JdbcChatToLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jdbc.repository.JdbcGithubLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jdbc.repository.JdbcStackoverflowLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jdbc.service.*;
-import ru.tinkoff.edu.java.scrapper.jdbc.util.JdbcTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jdbc.util.converter.JdbcGithubLinkConverter;
+import ru.tinkoff.edu.java.scrapper.jdbc.util.converter.JdbcStackoverflowLinkConverter;
 
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jdbc")
 public class JdbcAccessConfiguration {
-    @Bean
-    public JdbcTypeConverter jdbcTypeConverter() {
-        return new JdbcTypeConverter();
-    }
 
     @Bean
     public JdbcChatRepository jdbcChatRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -43,14 +40,14 @@ public class JdbcAccessConfiguration {
 
     @Bean
     public JdbcGithubLinkRepository jdbcGithubLinkRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                                             JdbcTypeConverter jdbcTypeConverter) {
-        return new JdbcGithubLinkRepository(namedParameterJdbcTemplate, jdbcTypeConverter);
+                                                             JdbcGithubLinkConverter jdbcGithubLinkConverter) {
+        return new JdbcGithubLinkRepository(namedParameterJdbcTemplate, jdbcGithubLinkConverter);
     }
 
     @Bean
     public JdbcStackoverflowLinkRepository jdbcStackoverflowLinkRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                                                           JdbcTypeConverter jdbcTypeConverter) {
-        return new JdbcStackoverflowLinkRepository(namedParameterJdbcTemplate, jdbcTypeConverter);
+                                                                           JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter) {
+        return new JdbcStackoverflowLinkRepository(namedParameterJdbcTemplate, jdbcStackoverflowLinkConverter);
     }
 
     @Bean
@@ -66,15 +63,15 @@ public class JdbcAccessConfiguration {
     @Bean
     public GithubLinkService<GithubLink> githubLinkService(JdbcGithubLinkRepository jdbcGithubLinkRepository,
                                                            GitHubClientService gitHubClientService,
-                                                           JdbcTypeConverter jdbcTypeConverter) {
-        return new JdbcGithubLinkService(jdbcGithubLinkRepository, gitHubClientService, jdbcTypeConverter);
+                                                           JdbcGithubLinkConverter jdbcGithubLinkConverter) {
+        return new JdbcGithubLinkService(jdbcGithubLinkRepository, gitHubClientService, jdbcGithubLinkConverter);
     }
 
     @Bean
     public StackoverflowLinkService<StackoverflowLink> stackoverflowLinkService(JdbcStackoverflowLinkRepository jdbcStackoverflowLinkRepository,
                                                                                 StackOverflowClientService stackOverflowClientService,
-                                                                                JdbcTypeConverter jdbcTypeConverter) {
-        return new JdbcStackoverflowLinkService(jdbcStackoverflowLinkRepository, stackOverflowClientService, jdbcTypeConverter);
+                                                                                JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter) {
+        return new JdbcStackoverflowLinkService(jdbcStackoverflowLinkRepository, stackOverflowClientService, jdbcStackoverflowLinkConverter);
     }
 
     @Bean
@@ -84,7 +81,8 @@ public class JdbcAccessConfiguration {
                                    GitHubClientService gitHubClientService,
                                    StackOverflowClientService stackOverflowClientService,
                                    TgBotClientService tgBotClientService,
-                                   JdbcTypeConverter jdbcTypeConverter) {
+                                   JdbcGithubLinkConverter jdbcGithubLinkConverter,
+                                   JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter) {
         return new JdbcLinkUpdater(
                 jdbcChatToLinkService,
                 githubLinkService,
@@ -92,6 +90,7 @@ public class JdbcAccessConfiguration {
                 gitHubClientService,
                 stackOverflowClientService,
                 tgBotClientService,
-                jdbcTypeConverter);
+                jdbcGithubLinkConverter,
+                jdbcStackoverflowLinkConverter);
     }
 }

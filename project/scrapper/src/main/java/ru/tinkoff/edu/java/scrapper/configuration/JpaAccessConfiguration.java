@@ -13,17 +13,13 @@ import ru.tinkoff.edu.java.scrapper.jpa.repository.JpaChatToLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jpa.repository.JpaGithubLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jpa.repository.JpaStackoverflowLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jpa.service.*;
-import ru.tinkoff.edu.java.scrapper.jpa.util.JpaTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaGithubLinkConverter;
+import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaStackoverflowLinkConverter;
 
 @Configuration
 @EnableJpaRepositories
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jpa")
 public class JpaAccessConfiguration {
-
-    @Bean
-    public JpaTypeConverter jpaTypeConverter() {
-        return new JpaTypeConverter();
-    }
 
     @Bean
     public JpaChatService jpaChatService(JpaChatRepository jpaChatRepository) {
@@ -38,15 +34,15 @@ public class JpaAccessConfiguration {
     @Bean
     public JpaGithubLinkService jpaGithubLinkService(JpaGithubLinkRepository jpaGithubLinkRepository,
                                                      GitHubClientService githubLinkService,
-                                                     JpaTypeConverter jpaTypeConverter) {
-        return new JpaGithubLinkService(jpaGithubLinkRepository, githubLinkService, jpaTypeConverter);
+                                                     JpaGithubLinkConverter jpaGithubLinkConverter) {
+        return new JpaGithubLinkService(jpaGithubLinkRepository, githubLinkService, jpaGithubLinkConverter);
     }
 
     @Bean
     public JpaStackoverflowLinkService jpaStackoverflowLinkService(JpaStackoverflowLinkRepository jpaStackoverflowLinkRepository,
                                                                    StackOverflowClientService stackOverflowClientService,
-                                                                   JpaTypeConverter jpaTypeConverter) {
-        return new JpaStackoverflowLinkService(jpaStackoverflowLinkRepository, stackOverflowClientService, jpaTypeConverter);
+                                                                   JpaStackoverflowLinkConverter jpaStackoverflowLinkConverter) {
+        return new JpaStackoverflowLinkService(jpaStackoverflowLinkRepository, stackOverflowClientService, jpaStackoverflowLinkConverter);
     }
 
     @Bean
@@ -56,7 +52,8 @@ public class JpaAccessConfiguration {
                                    GitHubClientService gitHubClientService,
                                    StackOverflowClientService stackOverflowClientService,
                                    TgBotClientService tgBotClientService,
-                                   JpaTypeConverter jpaTypeConverter) {
+                                   JpaGithubLinkConverter jpaGithubLinkConverter,
+                                   JpaStackoverflowLinkConverter jpaStackoverflowLinkConverter) {
         return new JpaLinkUpdater(
                 jpaChatToLinkService,
                 jpaGithubLinkService,
@@ -64,6 +61,7 @@ public class JpaAccessConfiguration {
                 gitHubClientService,
                 stackOverflowClientService,
                 tgBotClientService,
-                jpaTypeConverter);
+                jpaGithubLinkConverter,
+                jpaStackoverflowLinkConverter);
     }
 }

@@ -13,16 +13,12 @@ import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.GithubLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.inteface.LinkUpdater;
 import ru.tinkoff.edu.java.scrapper.jooq.service.*;
-import ru.tinkoff.edu.java.scrapper.jooq.util.JooqTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jooq.util.converter.JooqGithubLinkConverter;
+import ru.tinkoff.edu.java.scrapper.jooq.util.converter.JooqStackoverflowLinkConverter;
 
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jooq")
 public class JooqAccessConfiguration {
-
-    @Bean
-    public JooqTypeConverter jooqTypeConverter() {
-        return new JooqTypeConverter();
-    }
 
     @Bean
     public JooqChatService jooqChatService(DSLContext dslContext, Chat chatTable) {
@@ -37,20 +33,20 @@ public class JooqAccessConfiguration {
     @Bean
     public JooqGitHubLinkService jooqGitHubLinkService(DSLContext dslContext,
                                                        GitHubClientService githubLinkService,
-                                                       JooqTypeConverter jooqTypeConverter,
+                                                       JooqGithubLinkConverter jooqGithubLinkConverter,
                                                        GithubLink githubLinkTable) {
-        return new JooqGitHubLinkService(dslContext, githubLinkService, jooqTypeConverter, githubLinkTable);
+        return new JooqGitHubLinkService(dslContext, githubLinkService, jooqGithubLinkConverter, githubLinkTable);
     }
 
     @Bean
     public JooqStackoverflowLinkService jooqStackoverflowLinkService(DSLContext dslContext,
                                                                      StackOverflowClientService stackOverflowClientService,
-                                                                     JooqTypeConverter jooqTypeConverter,
+                                                                     JooqStackoverflowLinkConverter jooqStackoverflowLinkConverter,
                                                                      StackoverflowLink stackoverflowLinkTable) {
         return new JooqStackoverflowLinkService(
                 dslContext,
                 stackOverflowClientService,
-                jooqTypeConverter,
+                jooqStackoverflowLinkConverter,
                 stackoverflowLinkTable);
     }
 
@@ -61,7 +57,8 @@ public class JooqAccessConfiguration {
                                    GitHubClientService gitHubClientService,
                                    StackOverflowClientService stackOverflowClientService,
                                    TgBotClientService tgBotClientService,
-                                   JooqTypeConverter jooqTypeConverter) {
+                                   JooqGithubLinkConverter jooqGithubLinkConverter,
+                                   JooqStackoverflowLinkConverter jooqStackoverflowLinkConverter) {
         return new JooqLinkUpdater(
                 jooqChatToLinkService,
                 jooqGitHubLinkService,
@@ -69,6 +66,7 @@ public class JooqAccessConfiguration {
                 gitHubClientService,
                 stackOverflowClientService,
                 tgBotClientService,
-                jooqTypeConverter);
+                jooqGithubLinkConverter,
+                jooqStackoverflowLinkConverter);
     }
 }
