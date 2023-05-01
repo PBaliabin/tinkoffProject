@@ -9,11 +9,11 @@ public interface GithubLinkService<T1> {
     String OWNER = "owner";
     String REPOSITORY = "repository";
 
-    int add(URI url);
+    void add(URI url);
 
-    int remove(URI url);
+    void remove(URI url);
 
-    int update(T1 entityRecord);
+    void update(T1 entityRecord);
 
     Collection<T1> getLinksByLastCheckTime(LocalDateTime threshold);
 }

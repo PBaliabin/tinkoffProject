@@ -12,46 +12,65 @@ import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.GithubLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.inteface.LinkUpdater;
+import ru.tinkoff.edu.java.scrapper.jooq.repository.JooqChatRepository;
+import ru.tinkoff.edu.java.scrapper.jooq.repository.JooqChatToLinkRepository;
+import ru.tinkoff.edu.java.scrapper.jooq.repository.JooqGithubLinkRepository;
+import ru.tinkoff.edu.java.scrapper.jooq.repository.JooqStackoverflowLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jooq.service.*;
-import ru.tinkoff.edu.java.scrapper.jooq.util.JooqTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jooq.util.converter.JooqGithubLinkConverter;
+import ru.tinkoff.edu.java.scrapper.jooq.util.converter.JooqStackoverflowLinkConverter;
 
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jooq")
 public class JooqAccessConfiguration {
 
     @Bean
-    public JooqTypeConverter jooqTypeConverter() {
-        return new JooqTypeConverter();
+    public JooqChatRepository jooqChatRepository(DSLContext dslContext, Chat chatTable) {
+        return new JooqChatRepository(dslContext, chatTable);
     }
 
     @Bean
-    public JooqChatService jooqChatService(DSLContext dslContext, Chat chatTable) {
-        return new JooqChatService(dslContext, chatTable);
+    public JooqChatToLinkRepository jooqChatToLinkRepository(DSLContext dslContext, ChatToLink chatToLinkTable) {
+        return new JooqChatToLinkRepository(dslContext, chatToLinkTable);
     }
 
     @Bean
-    public JooqChatToLinkService jooqChatToLinkService(DSLContext dslContext, ChatToLink chatToLinkTable) {
-        return new JooqChatToLinkService(dslContext, chatToLinkTable);
+    public JooqGithubLinkRepository jooqGithubLinkRepository(DSLContext dslContext,
+                                                             GithubLink githubLinkTable) {
+        return new JooqGithubLinkRepository(dslContext, githubLinkTable);
     }
 
     @Bean
-    public JooqGitHubLinkService jooqGitHubLinkService(DSLContext dslContext,
+    public JooqStackoverflowLinkRepository jooqStackoverflowLinkRepository(DSLContext dslContext,
+                                                                           StackoverflowLink stackoverflowLinkTable) {
+        return new JooqStackoverflowLinkRepository(dslContext, stackoverflowLinkTable);
+    }
+
+    @Bean
+    public JooqChatService jooqChatService(JooqChatRepository jooqChatRepository) {
+        return new JooqChatService(jooqChatRepository);
+    }
+
+    @Bean
+    public JooqChatToLinkService jooqChatToLinkService(JooqChatToLinkRepository jooqChatToLinkRepository) {
+        return new JooqChatToLinkService(jooqChatToLinkRepository);
+    }
+
+    @Bean
+    public JooqGitHubLinkService jooqGitHubLinkService(JooqGithubLinkRepository jooqGithubLinkRepository,
                                                        GitHubClientService githubLinkService,
-                                                       JooqTypeConverter jooqTypeConverter,
-                                                       GithubLink githubLinkTable) {
-        return new JooqGitHubLinkService(dslContext, githubLinkService, jooqTypeConverter, githubLinkTable);
+                                                       JooqGithubLinkConverter jooqGithubLinkConverter) {
+        return new JooqGitHubLinkService(jooqGithubLinkRepository, githubLinkService, jooqGithubLinkConverter);
     }
 
     @Bean
-    public JooqStackoverflowLinkService jooqStackoverflowLinkService(DSLContext dslContext,
+    public JooqStackoverflowLinkService jooqStackoverflowLinkService(JooqStackoverflowLinkRepository jooqStackoverflowLinkRepository,
                                                                      StackOverflowClientService stackOverflowClientService,
-                                                                     JooqTypeConverter jooqTypeConverter,
-                                                                     StackoverflowLink stackoverflowLinkTable) {
+                                                                     JooqStackoverflowLinkConverter jooqStackoverflowLinkConverter) {
         return new JooqStackoverflowLinkService(
-                dslContext,
+                jooqStackoverflowLinkRepository,
                 stackOverflowClientService,
-                jooqTypeConverter,
-                stackoverflowLinkTable);
+                jooqStackoverflowLinkConverter);
     }
 
     @Bean
@@ -61,7 +80,8 @@ public class JooqAccessConfiguration {
                                    GitHubClientService gitHubClientService,
                                    StackOverflowClientService stackOverflowClientService,
                                    TgBotClientService tgBotClientService,
-                                   JooqTypeConverter jooqTypeConverter) {
+                                   JooqGithubLinkConverter jooqGithubLinkConverter,
+                                   JooqStackoverflowLinkConverter jooqStackoverflowLinkConverter) {
         return new JooqLinkUpdater(
                 jooqChatToLinkService,
                 jooqGitHubLinkService,
@@ -69,6 +89,7 @@ public class JooqAccessConfiguration {
                 gitHubClientService,
                 stackOverflowClientService,
                 tgBotClientService,
-                jooqTypeConverter);
+                jooqGithubLinkConverter,
+                jooqStackoverflowLinkConverter);
     }
 }

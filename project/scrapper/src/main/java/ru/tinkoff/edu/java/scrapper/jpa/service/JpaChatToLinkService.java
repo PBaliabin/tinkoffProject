@@ -7,21 +7,19 @@ import ru.tinkoff.edu.java.scrapper.jpa.repository.JpaChatToLinkRepository;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class JpaChatToLinkService implements ChatToLinkService<ChatToLink> {
     private final JpaChatToLinkRepository jpaChatToLinkRepository;
 
     @Override
-    public int add(long tgChatId, URI url) {
-        return List.of(jpaChatToLinkRepository.save(new ChatToLink(url.toString(), tgChatId))).size();
+    public void add(long tgChatId, URI url) {
+        jpaChatToLinkRepository.save(new ChatToLink(url.toString(), tgChatId));
     }
 
     @Override
-    public int remove(long tgChatId, URI url) {
+    public void remove(long tgChatId, URI url) {
         jpaChatToLinkRepository.delete(new ChatToLink(url.toString(), tgChatId));
-        return 1;
     }
 
     @Override

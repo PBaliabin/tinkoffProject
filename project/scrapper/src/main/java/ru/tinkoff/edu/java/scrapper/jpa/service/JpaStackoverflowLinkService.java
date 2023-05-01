@@ -7,39 +7,37 @@ import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.service.StackoverflowLinkService;
 import ru.tinkoff.edu.java.scrapper.jpa.entity.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.jpa.repository.JpaStackoverflowLinkRepository;
-import ru.tinkoff.edu.java.scrapper.jpa.util.JpaTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaStackoverflowLinkConverter;
 
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
 public class JpaStackoverflowLinkService implements StackoverflowLinkService<StackoverflowLink> {
     private final JpaStackoverflowLinkRepository jpaStackoverflowLinkRepository;
     private final StackOverflowClientService stackOverflowClientService;
-    private final JpaTypeConverter jpaTypeConverter;
+    private final JpaStackoverflowLinkConverter jpaStackoverflowLinkConverter;
 
     @Override
-    public int add(URI url) {
+    public void add(URI url) {
         Map<String, String> parsedLink = Parser.parseLink(url.toString());
         StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion(parsedLink.get(
                         StackoverflowLinkService.QUESTION_ID),
                 StackoverflowLinkService.SITE_STACKOVERFLOW);
-        StackoverflowLink stackoverflowLink = jpaTypeConverter.makeStackoverflowLink(url.toString(), stackoverflowResponse);
-        return List.of(jpaStackoverflowLinkRepository.save(stackoverflowLink)).size();
+        StackoverflowLink stackoverflowLink = jpaStackoverflowLinkConverter.makeStackoverflowLink(url.toString(), stackoverflowResponse);
+        jpaStackoverflowLinkRepository.save(stackoverflowLink);
     }
 
     @Override
-    public int remove(URI url) {
+    public void remove(URI url) {
         jpaStackoverflowLinkRepository.deleteById(url.toString());
-        return 1;
     }
 
     @Override
-    public int update(StackoverflowLink stackoverflowLink) {
-        return List.of(jpaStackoverflowLinkRepository.save(stackoverflowLink)).size();
+    public void update(StackoverflowLink stackoverflowLink) {
+        jpaStackoverflowLinkRepository.save(stackoverflowLink);
     }
 
     @Override

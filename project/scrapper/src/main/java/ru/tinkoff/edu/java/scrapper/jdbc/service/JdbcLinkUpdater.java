@@ -15,7 +15,8 @@ import ru.tinkoff.edu.java.scrapper.inteface.LinkUpdater;
 import ru.tinkoff.edu.java.scrapper.inteface.service.ChatToLinkService;
 import ru.tinkoff.edu.java.scrapper.inteface.service.GithubLinkService;
 import ru.tinkoff.edu.java.scrapper.inteface.service.StackoverflowLinkService;
-import ru.tinkoff.edu.java.scrapper.jdbc.util.JdbcTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jdbc.util.converter.JdbcGithubLinkConverter;
+import ru.tinkoff.edu.java.scrapper.jdbc.util.converter.JdbcStackoverflowLinkConverter;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -31,7 +32,8 @@ public class JdbcLinkUpdater implements LinkUpdater {
     private final StackOverflowClientService stackOverflowClientService;
     private final TgBotClientService tgBotClientService;
 
-    private final JdbcTypeConverter jdbcTypeConverter;
+    private final JdbcGithubLinkConverter jdbcGithubLinkConverter;
+    private final JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter;
 
     @Override
     public int update(LocalDateTime checkTimeThreshold) {
@@ -50,7 +52,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
                     parsedLink.get(GithubLinkService.OWNER),
                     parsedLink.get(GithubLinkService.REPOSITORY));
 
-            GithubLink updatedGithubLink = jdbcTypeConverter.makeGithubLink(githubLink.getLink(), gitHubResponse);
+            GithubLink updatedGithubLink = jdbcGithubLinkConverter.makeGithubLink(githubLink.getLink(), gitHubResponse);
 
             if (!Objects.equals(githubLink.getForksCount(), updatedGithubLink.getForksCount()) ||
                     !Objects.equals(githubLink.getOpenIssuesCount(), updatedGithubLink.getOpenIssuesCount())) {
@@ -78,7 +80,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
                     parsedLink.get(StackoverflowLinkService.SITE_STACKOVERFLOW)
             );
 
-            StackoverflowLink updatedStackoverflowLink = jdbcTypeConverter.makeStackoverflowLink(stackoverflowLink.getLink(), stackoverflowResponse);
+            StackoverflowLink updatedStackoverflowLink = jdbcStackoverflowLinkConverter.makeStackoverflowLink(stackoverflowLink.getLink(), stackoverflowResponse);
 
             if (!Objects.equals(stackoverflowLink.getIsAnswered(), updatedStackoverflowLink.getIsAnswered()) ||
                     !Objects.equals(stackoverflowLink.getAnswerCount(), updatedStackoverflowLink.getAnswerCount())) {

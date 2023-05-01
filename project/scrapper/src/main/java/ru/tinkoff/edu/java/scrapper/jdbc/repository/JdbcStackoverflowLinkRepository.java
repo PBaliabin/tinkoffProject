@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.jdbc.mapper.StackoverflowLinkRowMapper;
-import ru.tinkoff.edu.java.scrapper.jdbc.util.JdbcTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jdbc.util.converter.JdbcStackoverflowLinkConverter;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -16,22 +16,21 @@ import java.util.Map;
 public class JdbcStackoverflowLinkRepository {
 
     private final NamedParameterJdbcTemplate namedParamJdbcTemplate;
-    private final JdbcTypeConverter jdbcTypeConverter;
+    private final JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter;
 
-    public int add(StackoverflowLink stackoverflowLink) {
-        String sqlQuery = "INSERT INTO github_link VALUES(" +
+    public void add(StackoverflowLink stackoverflowLink) {
+        String sqlQuery = "INSERT INTO stackoverflow_link VALUES(" +
                 ":link," +
-                ":repositoryId," +
-                ":name," +
-                ":fullName," +
+                ":quotaMax," +
+                ":quotaRemaining," +
                 ":lastActivityTime," +
-                ":forksCount," +
-                ":openIssuesCount," +
+                ":isAnswered," +
+                ":answerCount," +
                 ":lastCheckTime)";
-        return namedParamJdbcTemplate.update(sqlQuery, jdbcTypeConverter.makeStackoverflowTableQueryMap(stackoverflowLink));
+        namedParamJdbcTemplate.update(sqlQuery, jdbcStackoverflowLinkConverter.makeStackoverflowTableQueryMap(stackoverflowLink));
     }
 
-    public int update(StackoverflowLink stackoverflowLink) {
+    public void update(StackoverflowLink stackoverflowLink) {
         String sqlQuery = "UPDATE stackoverflow_link SET " +
                 "quota_max = :quotaMax," +
                 "quota_remaining = :quotaRemaining," +
@@ -40,14 +39,14 @@ public class JdbcStackoverflowLinkRepository {
                 "answer_count = :answerCount," +
                 "last_check_time = :lastCheckTime" +
                 " WHERE link = :link";
-        return namedParamJdbcTemplate.update(sqlQuery, jdbcTypeConverter.makeStackoverflowTableQueryMap(stackoverflowLink));
+        namedParamJdbcTemplate.update(sqlQuery, jdbcStackoverflowLinkConverter.makeStackoverflowTableQueryMap(stackoverflowLink));
     }
 
-    public int remove(URI url) {
+    public void remove(URI url) {
         String sqlQuery = "DELETE FROM stackoverflow_link WHERE link = :link";
         Map<String, Object> map = new HashMap<>();
         map.put("link", url.toString());
-        return namedParamJdbcTemplate.update(sqlQuery, map);
+        namedParamJdbcTemplate.update(sqlQuery, map);
     }
 
     public List<StackoverflowLink> getAll() {

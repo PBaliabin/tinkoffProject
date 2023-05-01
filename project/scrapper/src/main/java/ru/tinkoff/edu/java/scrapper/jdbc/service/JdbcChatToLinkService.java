@@ -14,13 +14,13 @@ public class JdbcChatToLinkService implements ChatToLinkService<ChatToLink> {
     private final JdbcChatToLinkRepository jdbcChatToLinkRepository;
 
     @Override
-    public int add(long tgChatId, URI url) {
-        return jdbcChatToLinkRepository.addRow(new Chat(tgChatId), url);
+    public void add(long tgChatId, URI url) {
+        jdbcChatToLinkRepository.addRow(new Chat(tgChatId), url);
     }
 
     @Override
-    public int remove(long tgChatId, URI url) {
-        return jdbcChatToLinkRepository.deleteRow(new Chat(tgChatId), url);
+    public void remove(long tgChatId, URI url) {
+        jdbcChatToLinkRepository.deleteRow(new Chat(tgChatId), url);
     }
 
     @Override

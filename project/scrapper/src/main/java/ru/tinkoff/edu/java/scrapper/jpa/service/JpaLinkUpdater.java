@@ -15,7 +15,8 @@ import ru.tinkoff.edu.java.scrapper.inteface.service.StackoverflowLinkService;
 import ru.tinkoff.edu.java.scrapper.jpa.entity.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.jpa.entity.GithubLink;
 import ru.tinkoff.edu.java.scrapper.jpa.entity.StackoverflowLink;
-import ru.tinkoff.edu.java.scrapper.jpa.util.JpaTypeConverter;
+import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaGithubLinkConverter;
+import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaStackoverflowLinkConverter;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -31,7 +32,8 @@ public class JpaLinkUpdater implements LinkUpdater {
     private final StackOverflowClientService stackOverflowClientService;
     private final TgBotClientService tgBotClientService;
 
-    private final JpaTypeConverter jpaTypeConverter;
+    private final JpaGithubLinkConverter jpaGithubLinkConverter;
+    private final JpaStackoverflowLinkConverter jpaStackoverflowLinkConverter;
 
     @Override
     public int update(LocalDateTime checkTimeThreshold) {
@@ -50,7 +52,7 @@ public class JpaLinkUpdater implements LinkUpdater {
                     parsedLink.get(GithubLinkService.OWNER),
                     parsedLink.get(GithubLinkService.REPOSITORY));
 
-            GithubLink updatedGithubLink = jpaTypeConverter.makeGithubLink(githubLink.getLink(), gitHubResponse);
+            GithubLink updatedGithubLink = jpaGithubLinkConverter.makeGithubLink(githubLink.getLink(), gitHubResponse);
 
             if (!Objects.equals(githubLink.getForksCount(), updatedGithubLink.getForksCount()) ||
                     !Objects.equals(githubLink.getOpenIssuesCount(), updatedGithubLink.getOpenIssuesCount())) {
@@ -78,7 +80,7 @@ public class JpaLinkUpdater implements LinkUpdater {
                     parsedLink.get(StackoverflowLinkService.SITE_STACKOVERFLOW)
             );
 
-            StackoverflowLink updatedStackoverflowLink = jpaTypeConverter.makeStackoverflowLink(stackoverflowLink.getLink(), stackoverflowResponse);
+            StackoverflowLink updatedStackoverflowLink = jpaStackoverflowLinkConverter.makeStackoverflowLink(stackoverflowLink.getLink(), stackoverflowResponse);
 
             if (!Objects.equals(stackoverflowLink.getIsAnswered(), updatedStackoverflowLink.getIsAnswered()) ||
                     !Objects.equals(stackoverflowLink.getAnswerCount(), updatedStackoverflowLink.getAnswerCount())) {
@@ -105,10 +107,10 @@ public class JpaLinkUpdater implements LinkUpdater {
             changeLogs
                     .add(new LinkChangeLog(
                             tgChatId,
-                            outdatedGithubLinks.get(tgChatId).stream().map(jpaTypeConverter::convertJpaGithubLinkToCustom).toList(),
-                            updatedGithubLinks.get(tgChatId).stream().map(jpaTypeConverter::convertJpaGithubLinkToCustom).toList(),
-                            outdatedStackoverflowLinks.get(tgChatId).stream().map(jpaTypeConverter::convertJpaStackoverflowLinkToCustom).toList(),
-                            updatedStackoverflowLinks.get(tgChatId).stream().map(jpaTypeConverter::convertJpaStackoverflowLinkToCustom).toList()
+                            outdatedGithubLinks.get(tgChatId).stream().map(jpaGithubLinkConverter::convertJpaGithubLinkToCustom).toList(),
+                            updatedGithubLinks.get(tgChatId).stream().map(jpaGithubLinkConverter::convertJpaGithubLinkToCustom).toList(),
+                            outdatedStackoverflowLinks.get(tgChatId).stream().map(jpaStackoverflowLinkConverter::convertJpaStackoverflowLinkToCustom).toList(),
+                            updatedStackoverflowLinks.get(tgChatId).stream().map(jpaStackoverflowLinkConverter::convertJpaStackoverflowLinkToCustom).toList()
                     ));
         }
         tgBotClientService.sendUpdates(changeLogs);
