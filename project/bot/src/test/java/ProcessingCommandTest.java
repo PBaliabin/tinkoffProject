@@ -2,8 +2,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ru.tinkoff.edu.java.bot.service.TelegramBotService;
-import ru.tinkoff.edu.java.bot.service.handler.CommandProcessingUnit;
-import ru.tinkoff.edu.java.bot.service.handler.ListCommandProcessingUnit;
+import ru.tinkoff.edu.java.bot.handler.CommandProcessingUnit;
+import ru.tinkoff.edu.java.bot.handler.ListCommandProcessingUnit;
 
 import java.net.URI;
 import java.net.URISyntaxException;

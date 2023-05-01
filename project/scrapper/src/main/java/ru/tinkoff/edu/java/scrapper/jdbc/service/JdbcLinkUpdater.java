@@ -2,10 +2,10 @@ package ru.tinkoff.edu.java.scrapper.jdbc.service;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
-import ru.tinkoff.edu.java.scrapper.client.TgBotClientService;
-import ru.tinkoff.edu.java.scrapper.dto.LinkChangeLog;
+import ru.tinkoff.edu.java.scrapper.inteface.service.MessageService;
+import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
+import ru.tinkoff.edu.java.scrapper.dto.LinkUpdate;
 import ru.tinkoff.edu.java.scrapper.dto.entity.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink;
 import ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink;
@@ -30,7 +30,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
 
     private final GitHubClientService gitHubClientService;
     private final StackOverflowClientService stackOverflowClientService;
-    private final TgBotClientService tgBotClientService;
+    private final MessageService messageService;
 
     private final JdbcGithubLinkConverter jdbcGithubLinkConverter;
     private final JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter;
@@ -102,18 +102,15 @@ public class JdbcLinkUpdater implements LinkUpdater {
         }
 
         Set<Long> tgChatIds = outdatedGithubLinks.keySet();
-        List<LinkChangeLog> changeLogs = new ArrayList<>();
         for (Long tgChatId : tgChatIds) {
-            changeLogs
-                    .add(new LinkChangeLog(
-                            tgChatId,
-                            outdatedGithubLinks.get(tgChatId),
-                            updatedGithubLinks.get(tgChatId),
-                            outdatedStackoverflowLinks.get(tgChatId),
-                            updatedStackoverflowLinks.get(tgChatId)
-                    ));
+            messageService.send(new LinkUpdate(
+                    tgChatId,
+                    outdatedGithubLinks.get(tgChatId),
+                    updatedGithubLinks.get(tgChatId),
+                    outdatedStackoverflowLinks.get(tgChatId),
+                    updatedStackoverflowLinks.get(tgChatId)
+            ));
         }
-        tgBotClientService.sendUpdates(changeLogs);
         return linksWithUpdateCount;
     }
 }

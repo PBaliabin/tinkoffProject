@@ -2,7 +2,7 @@ package ru.tinkoff.edu.java.scrapper.jpa.service;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
+import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.service.GithubLinkService;
 import ru.tinkoff.edu.java.scrapper.jpa.entity.GithubLink;

@@ -4,9 +4,10 @@ import org.jooq.DSLContext;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
-import ru.tinkoff.edu.java.scrapper.client.TgBotClientService;
+import ru.tinkoff.edu.java.scrapper.inteface.service.MessageService;
+import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
+import ru.tinkoff.edu.java.scrapper.service.TgBotClientService;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Chat;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.GithubLink;
@@ -79,7 +80,7 @@ public class JooqAccessConfiguration {
                                    JooqStackoverflowLinkService jooqStackoverflowLinkService,
                                    GitHubClientService gitHubClientService,
                                    StackOverflowClientService stackOverflowClientService,
-                                   TgBotClientService tgBotClientService,
+                                   MessageService messageService,
                                    JooqGithubLinkConverter jooqGithubLinkConverter,
                                    JooqStackoverflowLinkConverter jooqStackoverflowLinkConverter) {
         return new JooqLinkUpdater(
@@ -88,7 +89,7 @@ public class JooqAccessConfiguration {
                 jooqStackoverflowLinkService,
                 gitHubClientService,
                 stackOverflowClientService,
-                tgBotClientService,
+                messageService,
                 jooqGithubLinkConverter,
                 jooqStackoverflowLinkConverter);
     }

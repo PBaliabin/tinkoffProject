@@ -4,9 +4,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
-import ru.tinkoff.edu.java.scrapper.client.TgBotClientService;
+import ru.tinkoff.edu.java.scrapper.inteface.service.MessageService;
+import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
+import ru.tinkoff.edu.java.scrapper.service.TgBotClientService;
 import ru.tinkoff.edu.java.scrapper.inteface.LinkUpdater;
 import ru.tinkoff.edu.java.scrapper.jpa.repository.JpaChatRepository;
 import ru.tinkoff.edu.java.scrapper.jpa.repository.JpaChatToLinkRepository;
@@ -51,7 +52,7 @@ public class JpaAccessConfiguration {
                                    JpaStackoverflowLinkService jpaStackoverflowLinkService,
                                    GitHubClientService gitHubClientService,
                                    StackOverflowClientService stackOverflowClientService,
-                                   TgBotClientService tgBotClientService,
+                                   MessageService messageService,
                                    JpaGithubLinkConverter jpaGithubLinkConverter,
                                    JpaStackoverflowLinkConverter jpaStackoverflowLinkConverter) {
         return new JpaLinkUpdater(
@@ -60,7 +61,7 @@ public class JpaAccessConfiguration {
                 jpaStackoverflowLinkService,
                 gitHubClientService,
                 stackOverflowClientService,
-                tgBotClientService,
+                messageService,
                 jpaGithubLinkConverter,
                 jpaStackoverflowLinkConverter);
     }

@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 
 @Configuration
-public class CommandsConfig {
+public class CommandsConfiguration {
 
     @Bean
     public BotCommand startBotCommand() {

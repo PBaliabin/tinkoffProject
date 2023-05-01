@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LinkChangeLog {
+public class LinkUpdate {
     private Long tgChatId;
     private List<GithubLink> outdatedGithubLinks;
     private List<GithubLink> updatedGithubLinks;

@@ -11,8 +11,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LinkChangeLog {
-    private String tgChatId;
+public class LinkUpdate {
+    private Long tgChatId;
     private List<GithubLink> outdatedGithubLinks;
     private List<GithubLink> updatedGithubLinks;
     private List<StackoverflowLink> outdatedStackoverflowLinks;

@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.java.bot;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,34 +14,38 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.tinkoff.edu.java.bot.configuration.TelegramBotConfig;
-import ru.tinkoff.edu.java.bot.model.dto.LinkChangeLog;
+import ru.tinkoff.edu.java.bot.model.config.TelegramBotConfig;
+import ru.tinkoff.edu.java.bot.model.dto.LinkUpdate;
 import ru.tinkoff.edu.java.bot.service.TelegramBotService;
-import ru.tinkoff.edu.java.bot.service.wrapper.GithubLinkWrapper;
-import ru.tinkoff.edu.java.bot.service.wrapper.StackoverflowLinkWrapper;
+import ru.tinkoff.edu.java.bot.service.UpdateProcessService;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
+@Slf4j
 @RestController
 public class WebhookTelegramBot extends TelegramWebhookBot {
     private final TelegramBotConfig telegramBotConfig;
     private final TelegramBotService telegramBotService;
+    private final UpdateProcessService updateProcessService;
 
     public WebhookTelegramBot(@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") TelegramBotConfig telegramBotConfig,
                               TelegramBotService telegramBotService,
-                              List<BotCommand> botCommands) {
-        super(telegramBotConfig.getToken());
+                              List<BotCommand> botCommands,
+                              UpdateProcessService updateProcessService) {
+        super(telegramBotConfig.token());
         this.telegramBotConfig = telegramBotConfig;
 
         try {
             this.execute(new SetMyCommands(botCommands, new BotCommandScopeDefault(), null));
-            this.execute(SetWebhook.builder().url(telegramBotConfig.getWebhookPath()).build());
+            this.execute(SetWebhook.builder().url(telegramBotConfig.webhookPath()).build());
         } catch (TelegramApiException e) {
             System.out.println("Error setting bot's command list: " + e.getMessage());
         }
 
         this.telegramBotService = telegramBotService;
+        this.updateProcessService = updateProcessService;
     }
 
     @Override
@@ -56,19 +61,13 @@ public class WebhookTelegramBot extends TelegramWebhookBot {
     }
 
     @PostMapping("/update")
-    public void processUpdate(@RequestBody List<LinkChangeLog> linkChangeLogList) {
-        for (LinkChangeLog changelog : linkChangeLogList) {
-            String stringBuilder = "Telegram chat " + changelog.getTgChatId() + " has next updates:\n" +
-                    GithubLinkWrapper.makeMessage(
-                            changelog.getOutdatedGithubLinks(),
-                            changelog.getUpdatedGithubLinks()
-                    ) +
-                    StackoverflowLinkWrapper.makeMessage(
-                            changelog.getOutdatedStackoverflowLinks(),
-                            changelog.getUpdatedStackoverflowLinks()
-                    );
-            System.out.println(stringBuilder);
-        }
+    public void processUpdate(@RequestBody LinkUpdate linkUpdate) {
+        Map<String, String> processedUpdate = updateProcessService.processUpdate(linkUpdate);
+        String logMessage = "\nTelegram chat with id=" +
+                processedUpdate.get(updateProcessService.TG_CHAT_ID) +
+                " has following updates:\n" +
+                processedUpdate.get(updateProcessService.MESSAGE);
+        log.info(logMessage);
     }
 
     private void sendMessage(SendMessage sendMessage) {
@@ -88,11 +87,11 @@ public class WebhookTelegramBot extends TelegramWebhookBot {
 
     @Override
     public String getBotPath() {
-        return telegramBotConfig.getWebhookPath();
+        return telegramBotConfig.webhookPath();
     }
 
     @Override
     public String getBotUsername() {
-        return telegramBotConfig.getBotName();
+        return telegramBotConfig.webhookPath();
     }
 }

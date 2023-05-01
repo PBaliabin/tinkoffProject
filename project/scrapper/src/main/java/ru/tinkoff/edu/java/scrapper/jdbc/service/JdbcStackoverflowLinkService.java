@@ -2,7 +2,7 @@ package ru.tinkoff.edu.java.scrapper.jdbc.service;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 import ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.service.StackoverflowLinkService;

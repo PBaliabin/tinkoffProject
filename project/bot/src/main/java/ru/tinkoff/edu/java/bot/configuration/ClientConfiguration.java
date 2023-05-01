@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
-import ru.tinkoff.edu.java.bot.ScrapperClient;
+import ru.tinkoff.edu.java.bot.interfaces.ScrapperClient;
 
 @Configuration
 public class ClientConfiguration {

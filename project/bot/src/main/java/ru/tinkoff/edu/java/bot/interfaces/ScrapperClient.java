@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot;
+package ru.tinkoff.edu.java.bot.interfaces;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,11 +1,13 @@
-package ru.tinkoff.edu.java.bot.service.wrapper;
+package ru.tinkoff.edu.java.bot.wrapper;
 
+import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.model.dto.StackoverflowLink;
 
 import java.util.List;
 
+@Component
 public class StackoverflowLinkWrapper {
-    public static String makeMessage(List<StackoverflowLink> outdatedStackoverflowLinks, List<StackoverflowLink> updatedStackoverflowLinks) {
+    public String makeMessage(List<StackoverflowLink> outdatedStackoverflowLinks, List<StackoverflowLink> updatedStackoverflowLinks) {
         StringBuilder stringBuilder = new StringBuilder("\tfor Stackoverflow links:\n");
         for (int i = 0; i < outdatedStackoverflowLinks.size(); i++) {
             stringBuilder.append("\t\tlink ").append(outdatedStackoverflowLinks.get(i).getLink()).append(" has changes\n");

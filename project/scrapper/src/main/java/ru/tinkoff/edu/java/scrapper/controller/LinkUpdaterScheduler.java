@@ -17,7 +17,7 @@ public class LinkUpdaterScheduler {
     public void update() throws InterruptedException {
         System.out.println("Starting update links");
 //        linkUpdater.update(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
-        linkUpdater.update(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
+//        linkUpdater.update(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
         System.out.println("Links updated");
     }
 }

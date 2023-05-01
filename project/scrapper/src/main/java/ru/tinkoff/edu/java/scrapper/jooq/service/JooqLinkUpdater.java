@@ -2,15 +2,15 @@ package ru.tinkoff.edu.java.scrapper.jooq.service;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
-import ru.tinkoff.edu.java.scrapper.client.TgBotClientService;
+import ru.tinkoff.edu.java.scrapper.inteface.service.MessageService;
+import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.GithubLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatToLinkRecord;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.GithubLinkRecord;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.StackoverflowLinkRecord;
-import ru.tinkoff.edu.java.scrapper.dto.LinkChangeLog;
+import ru.tinkoff.edu.java.scrapper.dto.LinkUpdate;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.LinkUpdater;
@@ -29,7 +29,7 @@ public class JooqLinkUpdater implements LinkUpdater {
 
     private final GitHubClientService gitHubClientService;
     private final StackOverflowClientService stackOverflowClientService;
-    private final TgBotClientService tgBotClientService;
+    private final MessageService messageService;
 
     private final JooqGithubLinkConverter jooqGithubLinkConverter;
     private final JooqStackoverflowLinkConverter jooqStackoverflowLinkConverter;
@@ -95,18 +95,31 @@ public class JooqLinkUpdater implements LinkUpdater {
         }
 
         Set<Long> tgChatIds = outdatedGithubLinks.keySet();
-        List<LinkChangeLog> changeLogs = new ArrayList<>();
         for (Long tgChatId : tgChatIds) {
-            changeLogs
-                    .add(new LinkChangeLog(
-                            tgChatId,
-                            outdatedGithubLinks.get(tgChatId).stream().map(jooqGithubLinkConverter::convertJooqGithubLinkToCustom).toList(),
-                            updatedGithubLinks.get(tgChatId).stream().map(jooqGithubLinkConverter::convertJooqGithubLinkToCustom).toList(),
-                            outdatedStackoverflowLinks.get(tgChatId).stream().map(jooqStackoverflowLinkConverter::convertJooqStackoverflowLinkToCustom).toList(),
-                            updatedStackoverflowLinks.get(tgChatId).stream().map(jooqStackoverflowLinkConverter::convertJooqStackoverflowLinkToCustom).toList()
-                    ));
+            messageService.send(new LinkUpdate(
+                    tgChatId,
+                    outdatedGithubLinks
+                            .get(tgChatId)
+                            .stream()
+                            .map(jooqGithubLinkConverter::convertJooqGithubLinkToCustom)
+                            .toList(),
+                    updatedGithubLinks
+                            .get(tgChatId)
+                            .stream()
+                            .map(jooqGithubLinkConverter::convertJooqGithubLinkToCustom)
+                            .toList(),
+                    outdatedStackoverflowLinks
+                            .get(tgChatId)
+                            .stream()
+                            .map(jooqStackoverflowLinkConverter::convertJooqStackoverflowLinkToCustom)
+                            .toList(),
+                    updatedStackoverflowLinks
+                            .get(tgChatId)
+                            .stream()
+                            .map(jooqStackoverflowLinkConverter::convertJooqStackoverflowLinkToCustom)
+                            .toList()
+            ));
         }
-        tgBotClientService.sendUpdates(changeLogs);
         return linksWithUpdateCount;
     }
 
