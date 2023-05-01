@@ -2,23 +2,18 @@ package ru.tinkoff.edu.java.scrapper.jooq.repository;
 
 import lombok.AllArgsConstructor;
 import org.jooq.DSLContext;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.Chat;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatToLinkRecord;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @AllArgsConstructor
 public class JooqChatToLinkRepository {
     private final DSLContext dslContext;
     private final ru.tinkoff.edu.java.scrapper.domain.jooq.tables.ChatToLink chatToLinkTable;
 
-    public int add(ChatToLink chatToLink) {
-        return dslContext
+    public void add(ChatToLink chatToLink) {
+        dslContext
                 .insertInto(chatToLinkTable)
                 .values(
                         chatToLink.getLink(),
@@ -26,8 +21,8 @@ public class JooqChatToLinkRepository {
                 .execute();
     }
 
-    public int delete(ChatToLink chatToLink) {
-        return dslContext
+    public void delete(ChatToLink chatToLink) {
+        dslContext
                 .deleteFrom(chatToLinkTable)
                 .where(chatToLinkTable.LINK.eq(chatToLink.getLink())
                         .and(chatToLinkTable.CHAT_ID.eq(chatToLink.getChatId())))

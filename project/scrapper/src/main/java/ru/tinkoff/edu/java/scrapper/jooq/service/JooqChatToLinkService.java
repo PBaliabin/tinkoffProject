@@ -1,10 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.jooq.service;
 
 import lombok.RequiredArgsConstructor;
-import org.jooq.DSLContext;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatToLinkRecord;
 import ru.tinkoff.edu.java.scrapper.inteface.service.ChatToLinkService;
+import ru.tinkoff.edu.java.scrapper.jooq.repository.JooqChatToLinkRepository;
 
 import java.net.URI;
 import java.util.Collection;
@@ -12,30 +12,25 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class JooqChatToLinkService implements ChatToLinkService<ChatToLinkRecord> {
 
-    private final DSLContext dslContext;
-    private final ru.tinkoff.edu.java.scrapper.domain.jooq.tables.ChatToLink chatToLinkTable;
+    private final JooqChatToLinkRepository jooqChatToLinkRepository;
 
     @Override
     public void add(long tgChatId, URI url) {
-        dslContext.insertInto(chatToLinkTable).values(new ChatToLink(url.toString(), tgChatId)).execute();
+        jooqChatToLinkRepository.add(new ChatToLink(url.toString(), tgChatId));
     }
 
     @Override
     public void remove(long tgChatId, URI url) {
-        dslContext
-                .deleteFrom(chatToLinkTable)
-                .where(chatToLinkTable.LINK.eq(url.toString())
-                        .and(chatToLinkTable.CHAT_ID.eq(tgChatId)))
-                .execute();
+        jooqChatToLinkRepository.delete(new ChatToLink(url.toString(), tgChatId));
     }
 
     @Override
     public Collection<ChatToLinkRecord> getLinksById(long tgChatId) {
-        return dslContext.selectFrom(chatToLinkTable).where(chatToLinkTable.CHAT_ID.eq(tgChatId)).fetch();
+        return jooqChatToLinkRepository.getLinksById(tgChatId);
     }
 
     @Override
     public Collection<ChatToLinkRecord> getChatsByLink(String url) {
-        return dslContext.selectFrom(chatToLinkTable).where(chatToLinkTable.LINK.eq(url)).fetch();
+        return jooqChatToLinkRepository.getChatsByLink(url);
     }
 }

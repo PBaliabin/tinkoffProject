@@ -36,8 +36,7 @@ CREATE TABLE IF NOT EXISTS chat_to_link
     CONSTRAINT chat_to_link_pkey PRIMARY KEY (link, chat_id)
 );
 
-DROP FUNCTION IF EXISTS updateGithubTableFunction;
-CREATE FUNCTION updateGithubTableFunction() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION updateGithubTableFunction() RETURNS TRIGGER AS $$
 BEGIN
     DELETE FROM github_link
     WHERE (SELECT count(*) FROM chat_to_link WHERE link = old.link) = 0 AND link = old.link;
@@ -45,8 +44,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP FUNCTION IF EXISTS updateStackoverflowTableFunction;
-CREATE FUNCTION updateStackoverflowTableFunction() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION updateStackoverflowTableFunction() RETURNS TRIGGER AS $$
 BEGIN
     DELETE FROM stackoverflow_link
     WHERE (SELECT count(*) FROM chat_to_link WHERE link = old.link) = 0 AND link = old.link;

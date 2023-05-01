@@ -19,14 +19,13 @@ public class JdbcStackoverflowLinkRepository {
     private final JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter;
 
     public void add(StackoverflowLink stackoverflowLink) {
-        String sqlQuery = "INSERT INTO github_link VALUES(" +
+        String sqlQuery = "INSERT INTO stackoverflow_link VALUES(" +
                 ":link," +
-                ":repositoryId," +
-                ":name," +
-                ":fullName," +
+                ":quotaMax," +
+                ":quotaRemaining," +
                 ":lastActivityTime," +
-                ":forksCount," +
-                ":openIssuesCount," +
+                ":isAnswered," +
+                ":answerCount," +
                 ":lastCheckTime)";
         namedParamJdbcTemplate.update(sqlQuery, jdbcStackoverflowLinkConverter.makeStackoverflowTableQueryMap(stackoverflowLink));
     }

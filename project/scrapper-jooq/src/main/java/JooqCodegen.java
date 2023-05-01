@@ -5,9 +5,9 @@ public class JooqCodegen {
     public static void main(String[] args) throws Exception {
 
         Database database = new Database()
-                .withName("org.jooq.meta.extensions.liquibase.LiquibaseDatabase")
-//                .withName("org.jooq.meta.postgres.PostgresDatabase")
-//                .withInputSchema("public")
+//                .withName("org.jooq.meta.extensions.liquibase.LiquibaseDatabase")
+                .withName("org.jooq.meta.postgres.PostgresDatabase")
+                .withInputSchema("public")
                 .withProperties(
                         new Property().withKey("rootPath").withValue("scrapper/src/main/resources"),
                         new Property().withKey("scripts").withValue("master.xml"),
@@ -36,7 +36,12 @@ public class JooqCodegen {
                 .withDirectory("scrapper/src/main/java");
 
         Configuration configuration = new Configuration()
-//                .withJdbc(new Jdbc().withDriver("org.postgresql.Driver").withUrl("jdbc:postgresql://localhost:5432/jooq").withUser("postgres").withPassword("PostgresBatya"))
+                .withJdbc(
+                        new Jdbc()
+                                .withDriver("org.postgresql.Driver")
+                                .withUrl("jdbc:postgresql://localhost:5432/scrapper")
+                                .withUsername("postgres")
+                                .withPassword("postgres"))
                 .withGenerator(
                         new Generator()
                                 .withDatabase(database)

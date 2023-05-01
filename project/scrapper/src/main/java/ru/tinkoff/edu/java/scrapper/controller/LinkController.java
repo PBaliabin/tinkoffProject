@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatToLinkRecord;
 import ru.tinkoff.edu.java.scrapper.dto.exception.BadRequestException;
 import ru.tinkoff.edu.java.scrapper.dto.exception.NotFoundException;
 import ru.tinkoff.edu.java.scrapper.dto.request.AddLinkRequest;
@@ -33,9 +32,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class LinkController {
 
-    private final ChatToLinkService chatToLinkService;
-    private final GithubLinkService githubLinkService;
-    private final StackoverflowLinkService stackoverflowLinkService;
+    private final ChatToLinkService<?> chatToLinkService;
+    private final GithubLinkService<?> githubLinkService;
+    private final StackoverflowLinkService<?> stackoverflowLinkService;
 
 
     @Operation(summary = "Получить все отслеживаемые ссылки")
@@ -56,9 +55,10 @@ public class LinkController {
     public ResponseEntity<ListLinksResponse> getAllLinks(@RequestHeader(value = "Tg-Chat-Id") long tgChatId) {
         try {
             List<LinkResponse> responseList = new ArrayList<>();
-            List<ChatToLinkRecord> links = (List<ChatToLinkRecord>) chatToLinkService.getLinksById(tgChatId);
+            List<?> links = (List<?>) chatToLinkService.getLinksById(tgChatId);
             for (int i = 0; i < links.size(); i++) {
-                responseList.add(i, new LinkResponse(i, new URI(links.get(i).getLink())));
+                //TODO add mapping links to linkResponse
+                responseList.add(i, new LinkResponse(i, new URI(links.get(i).toString())));
             }
             return ResponseEntity.status(HttpStatus.OK).body(new ListLinksResponse(responseList, responseList.size()));
         } catch (Exception e) {
@@ -86,12 +86,8 @@ public class LinkController {
             chatToLinkService.add(tgChatId, link.getLink());
             Map<String, String> parsedLink = Parser.parseLink(link.getLink().toString());
             switch (parsedLink.get("domain")) {
-                case "github.com" -> {
-                    githubLinkService.add(link.getLink());
-                }
-                case "stackoverflow.com" -> {
-                    stackoverflowLinkService.add(link.getLink());
-                }
+                case "github.com" -> githubLinkService.add(link.getLink());
+                case "stackoverflow.com" -> stackoverflowLinkService.add(link.getLink());
             }
             return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(tgChatId, link.getLink()));
         } catch (BadRequestException e) {

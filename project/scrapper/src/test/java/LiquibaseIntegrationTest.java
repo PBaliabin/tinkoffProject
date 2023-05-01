@@ -40,11 +40,16 @@ public class LiquibaseIntegrationTest extends IntegrationEnvironment {
             stringsReceived.add(rs.getString("TABLE_NAME"));
         }
 
-        Assertions.assertThat(stringsReceived).hasSameElementsAs(Set.of("chat",
-                "chat_to_link",
-                "databasechangelog",
-                "databasechangeloglock",
-                "link"));
+        Assertions
+                .assertThat(stringsReceived)
+                .hasSameElementsAs(
+                        Set.of(
+                                "chat",
+                                "chat_to_link",
+                                "databasechangelog",
+                                "databasechangeloglock",
+                                "github_link",
+                                "stackoverflow_link"));
     }
 
     @BeforeAll

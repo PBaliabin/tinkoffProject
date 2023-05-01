@@ -31,7 +31,8 @@ abstract class IntegrationEnvironment {
                     "spring.datasource.url=" + POSTGRE_SQL_CONTAINER.getJdbcUrl(),
                     "spring.datasource.username=" + POSTGRE_SQL_CONTAINER.getUsername(),
                     "spring.datasource.password=" + POSTGRE_SQL_CONTAINER.getPassword(),
-                    "spring.datasource.driver-class-name=" + POSTGRE_SQL_CONTAINER.getDriverClassName());
+                    "spring.datasource.driver-class-name=" + POSTGRE_SQL_CONTAINER.getDriverClassName(),
+                    "spring.liquibase.enabled=" + "false");
         }
     }
 

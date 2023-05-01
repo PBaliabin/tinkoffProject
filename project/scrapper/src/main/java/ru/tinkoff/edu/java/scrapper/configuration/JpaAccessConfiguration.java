@@ -17,7 +17,7 @@ import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaGithubLinkConverter;
 import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaStackoverflowLinkConverter;
 
 @Configuration
-@EnableJpaRepositories
+@EnableJpaRepositories(basePackages = "ru.tinkoff.edu.java.scrapper.jpa.repository")
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jpa")
 public class JpaAccessConfiguration {
 

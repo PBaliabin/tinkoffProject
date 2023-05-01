@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.scrapper.dto.exception.BadRequestException;
@@ -15,10 +16,11 @@ import ru.tinkoff.edu.java.scrapper.inteface.service.ChatService;
 
 @RequestMapping("/tg-chat")
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class TgChatController {
 
-    private final ChatService chatService;
+    private final ChatService<?> chatService;
 
     @Operation(summary = "Зарегистрировать чат")
     @ApiResponses(value = {
@@ -34,7 +36,7 @@ public class TgChatController {
     public void signInChat(@PathVariable long id) {
         try {
             chatService.register(id);
-            System.out.println("Register chat with id = " + id);
+            log.info("Register chat with id = " + id);
         } catch (Exception e) {
             throw new BadRequestException();
         }
@@ -59,7 +61,7 @@ public class TgChatController {
     public void deleteChat(@PathVariable long id) {
         try {
             chatService.unregister(id);
-            System.out.println("Unregister chat with id = " + id);
+            log.info("Unregister chat with id = " + id);
         } catch (BadRequestException e) {
             throw new BadRequestException();
         } catch (NotFoundException e) {

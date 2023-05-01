@@ -7,12 +7,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
 import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
 import ru.tinkoff.edu.java.scrapper.client.TgBotClientService;
-import ru.tinkoff.edu.java.scrapper.dto.entity.Chat;
 import ru.tinkoff.edu.java.scrapper.dto.entity.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink;
 import ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink;
-import ru.tinkoff.edu.java.scrapper.inteface.LinkUpdater;
-import ru.tinkoff.edu.java.scrapper.inteface.service.ChatService;
 import ru.tinkoff.edu.java.scrapper.inteface.service.ChatToLinkService;
 import ru.tinkoff.edu.java.scrapper.inteface.service.GithubLinkService;
 import ru.tinkoff.edu.java.scrapper.inteface.service.StackoverflowLinkService;
@@ -51,38 +48,38 @@ public class JdbcAccessConfiguration {
     }
 
     @Bean
-    public ChatService<Chat> chatService(JdbcChatRepository jdbcChatRepository) {
+    public JdbcChatService chatService(JdbcChatRepository jdbcChatRepository) {
         return new JdbcChatService(jdbcChatRepository);
     }
 
     @Bean
-    public ChatToLinkService<ChatToLink> chatToLinkService(JdbcChatToLinkRepository jdbcChatToLinkRepository) {
+    public JdbcChatToLinkService chatToLinkService(JdbcChatToLinkRepository jdbcChatToLinkRepository) {
         return new JdbcChatToLinkService(jdbcChatToLinkRepository);
     }
 
     @Bean
-    public GithubLinkService<GithubLink> githubLinkService(JdbcGithubLinkRepository jdbcGithubLinkRepository,
-                                                           GitHubClientService gitHubClientService,
-                                                           JdbcGithubLinkConverter jdbcGithubLinkConverter) {
+    public JdbcGithubLinkService githubLinkService(JdbcGithubLinkRepository jdbcGithubLinkRepository,
+                                                   GitHubClientService gitHubClientService,
+                                                   JdbcGithubLinkConverter jdbcGithubLinkConverter) {
         return new JdbcGithubLinkService(jdbcGithubLinkRepository, gitHubClientService, jdbcGithubLinkConverter);
     }
 
     @Bean
-    public StackoverflowLinkService<StackoverflowLink> stackoverflowLinkService(JdbcStackoverflowLinkRepository jdbcStackoverflowLinkRepository,
-                                                                                StackOverflowClientService stackOverflowClientService,
-                                                                                JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter) {
+    public JdbcStackoverflowLinkService stackoverflowLinkService(JdbcStackoverflowLinkRepository jdbcStackoverflowLinkRepository,
+                                                                 StackOverflowClientService stackOverflowClientService,
+                                                                 JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter) {
         return new JdbcStackoverflowLinkService(jdbcStackoverflowLinkRepository, stackOverflowClientService, jdbcStackoverflowLinkConverter);
     }
 
     @Bean
-    public LinkUpdater linkUpdater(ChatToLinkService<ChatToLink> jdbcChatToLinkService,
-                                   GithubLinkService<GithubLink> githubLinkService,
-                                   StackoverflowLinkService<StackoverflowLink> stackoverflowLinkService,
-                                   GitHubClientService gitHubClientService,
-                                   StackOverflowClientService stackOverflowClientService,
-                                   TgBotClientService tgBotClientService,
-                                   JdbcGithubLinkConverter jdbcGithubLinkConverter,
-                                   JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter) {
+    public JdbcLinkUpdater linkUpdater(ChatToLinkService<ChatToLink> jdbcChatToLinkService,
+                                       GithubLinkService<GithubLink> githubLinkService,
+                                       StackoverflowLinkService<StackoverflowLink> stackoverflowLinkService,
+                                       GitHubClientService gitHubClientService,
+                                       StackOverflowClientService stackOverflowClientService,
+                                       TgBotClientService tgBotClientService,
+                                       JdbcGithubLinkConverter jdbcGithubLinkConverter,
+                                       JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter) {
         return new JdbcLinkUpdater(
                 jdbcChatToLinkService,
                 githubLinkService,

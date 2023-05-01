@@ -77,11 +77,7 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void addGithubLinkTest() {
-        long time = System.currentTimeMillis();
-        GithubLink githubLink = new GithubLink();
-        githubLink.setLink("url1");
-        githubLink.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        githubLink.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        GithubLink githubLink = makeGithubLinkWithId(1);
         Assertions.assertThat(jpaGithubLinkRepository.save(githubLink)).isEqualTo(githubLink);
     }
 
@@ -89,13 +85,9 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void updateGithubLinkTest() {
-        long time = System.currentTimeMillis();
-        GithubLink githubLink = new GithubLink();
-        githubLink.setLink("url1");
-        githubLink.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        githubLink.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        GithubLink githubLink = makeGithubLinkWithId(1);
         jpaGithubLinkRepository.save(githubLink);
-        githubLink.setLastActivityTime(new Timestamp(time + 1000).toLocalDateTime());
+        githubLink.setLastActivityTime(new Timestamp(System.currentTimeMillis() + 1000).toLocalDateTime());
         Assertions.assertThat(jpaGithubLinkRepository.save(githubLink)).isEqualTo(githubLink);
     }
 
@@ -103,11 +95,7 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void deleteGithubLinkTest() {
-        long time = System.currentTimeMillis();
-        GithubLink githubLink = new GithubLink();
-        githubLink.setLink("url1");
-        githubLink.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        githubLink.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        GithubLink githubLink = makeGithubLinkWithId(1);
         jpaGithubLinkRepository.save(githubLink);
         jpaGithubLinkRepository.delete(githubLink);
     }
@@ -116,18 +104,10 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void getAllGithubLinksTest() {
-        long time = System.currentTimeMillis();
-
-        GithubLink githubLink1 = new GithubLink();
-        githubLink1.setLink("url1");
-        githubLink1.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        githubLink1.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        GithubLink githubLink1 = makeGithubLinkWithId(1);
         jpaGithubLinkRepository.save(githubLink1);
 
-        GithubLink githubLink2 = new GithubLink();
-        githubLink2.setLink("url2");
-        githubLink2.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        githubLink2.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        GithubLink githubLink2 = makeGithubLinkWithId(2);
         jpaGithubLinkRepository.save(githubLink2);
 
         List<GithubLink> githubLinks = (List<GithubLink>) jpaGithubLinkRepository.findAll();
@@ -139,22 +119,14 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void getGithubLinksByLastCheckTimeTest() {
-        long time = System.currentTimeMillis();
-
-        GithubLink githubLink1 = new GithubLink();
-        githubLink1.setLink("url1");
-        githubLink1.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        githubLink1.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        GithubLink githubLink1 = makeGithubLinkWithId(1);
         jpaGithubLinkRepository.save(githubLink1);
 
-        GithubLink githubLink2 = new GithubLink();
-        githubLink2.setLink("url2");
-        githubLink2.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        githubLink2.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        GithubLink githubLink2 = makeGithubLinkWithId(2);
         jpaGithubLinkRepository.save(githubLink2);
 
         List<GithubLink> githubLinks = (List<GithubLink>) jpaGithubLinkRepository
-                .getGithubLinksByLastCheckTimeBefore(new Timestamp(time).toLocalDateTime());
+                .getGithubLinksByLastCheckTimeBefore(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
 
         Assertions.assertThat(githubLinks).hasSameElementsAs(List.of(githubLink1, githubLink2));
     }
@@ -163,11 +135,7 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void addStackoverflowLinkTest() {
-        long time = System.currentTimeMillis();
-        StackoverflowLink stackoverflowLink = new StackoverflowLink();
-        stackoverflowLink.setLink("url1");
-        stackoverflowLink.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        stackoverflowLink.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        StackoverflowLink stackoverflowLink = makeStackoverflowLinkWithId(1);
         Assertions.assertThat(jpaStackoverflowLinkRepository.save(stackoverflowLink)).isEqualTo(stackoverflowLink);
     }
 
@@ -175,13 +143,9 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void updateStackoverflowLinkTest() {
-        long time = System.currentTimeMillis();
-        StackoverflowLink stackoverflowLink = new StackoverflowLink();
-        stackoverflowLink.setLink("url1");
-        stackoverflowLink.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        stackoverflowLink.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        StackoverflowLink stackoverflowLink = makeStackoverflowLinkWithId(1);
         jpaStackoverflowLinkRepository.save(stackoverflowLink);
-        stackoverflowLink.setLastActivityTime(new Timestamp(time + 1000).toLocalDateTime());
+        stackoverflowLink.setLastActivityTime(new Timestamp(System.currentTimeMillis() + 1000).toLocalDateTime());
         Assertions.assertThat(jpaStackoverflowLinkRepository.save(stackoverflowLink)).isEqualTo(stackoverflowLink);
     }
 
@@ -189,11 +153,7 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void deleteStackoverflowLinkTest() {
-        long time = System.currentTimeMillis();
-        StackoverflowLink stackoverflowLink = new StackoverflowLink();
-        stackoverflowLink.setLink("url1");
-        stackoverflowLink.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        stackoverflowLink.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        StackoverflowLink stackoverflowLink = makeStackoverflowLinkWithId(1);
         jpaStackoverflowLinkRepository.save(stackoverflowLink);
         jpaStackoverflowLinkRepository.delete(stackoverflowLink);
     }
@@ -202,18 +162,10 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void getAllStackoverflowLinksTest() {
-        long time = System.currentTimeMillis();
-
-        StackoverflowLink stackoverflowLink1 = new StackoverflowLink();
-        stackoverflowLink1.setLink("url1");
-        stackoverflowLink1.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        stackoverflowLink1.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        StackoverflowLink stackoverflowLink1 = makeStackoverflowLinkWithId(1);
         jpaStackoverflowLinkRepository.save(stackoverflowLink1);
 
-        StackoverflowLink stackoverflowLink2 = new StackoverflowLink();
-        stackoverflowLink2.setLink("url2");
-        stackoverflowLink2.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        stackoverflowLink2.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        StackoverflowLink stackoverflowLink2 = makeStackoverflowLinkWithId(2);
         jpaStackoverflowLinkRepository.save(stackoverflowLink2);
 
         List<StackoverflowLink> stackoverflowLinks = (List<StackoverflowLink>) jpaStackoverflowLinkRepository.findAll();
@@ -225,22 +177,14 @@ public class JpaLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void getStackoverflowLinksByLastCheckTimeTest() {
-        long time = System.currentTimeMillis();
-
-        StackoverflowLink stackoverflowLink1 = new StackoverflowLink();
-        stackoverflowLink1.setLink("url1");
-        stackoverflowLink1.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        stackoverflowLink1.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        StackoverflowLink stackoverflowLink1 = makeStackoverflowLinkWithId(1);
         jpaStackoverflowLinkRepository.save(stackoverflowLink1);
 
-        StackoverflowLink stackoverflowLink2 = new StackoverflowLink();
-        stackoverflowLink2.setLink("url2");
-        stackoverflowLink2.setLastActivityTime(new Timestamp(time).toLocalDateTime());
-        stackoverflowLink2.setLastCheckTime(new Timestamp(time).toLocalDateTime());
+        StackoverflowLink stackoverflowLink2 = makeStackoverflowLinkWithId(2);
         jpaStackoverflowLinkRepository.save(stackoverflowLink2);
 
         List<StackoverflowLink> stackoverflowLinks = (List<StackoverflowLink>) jpaStackoverflowLinkRepository
-                .getStackoverflowLinksByLastCheckTimeBefore(new Timestamp(time).toLocalDateTime());
+                .getStackoverflowLinksByLastCheckTimeBefore(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
         Assertions.assertThat(stackoverflowLinks).hasSameElementsAs(List.of(stackoverflowLink1, stackoverflowLink2));
     }
 
@@ -259,5 +203,30 @@ public class JpaLinkTest extends IntegrationEnvironment {
         Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
         Liquibase liquibase = new Liquibase("master.xml", new ClassLoaderResourceAccessor(), database);
         liquibase.update(new Contexts(), new LabelExpression());
+    }
+
+    private GithubLink makeGithubLinkWithId(int id){
+        return new GithubLink(
+                "url" + id,
+                "repo" + id,
+                "name" + id,
+                "fullName" + id,
+                new Timestamp(System.currentTimeMillis()).toLocalDateTime(),
+                3 * id,
+                4 * id,
+                new Timestamp(System.currentTimeMillis()).toLocalDateTime()
+        );
+    }
+
+    private StackoverflowLink makeStackoverflowLinkWithId(int id){
+        return  new StackoverflowLink(
+                "url" + id,
+                100 + id,
+                101 + id,
+                new Timestamp(System.currentTimeMillis()).toLocalDateTime(),
+                false,
+                3 * id,
+                new Timestamp(System.currentTimeMillis()).toLocalDateTime()
+        );
     }
 }

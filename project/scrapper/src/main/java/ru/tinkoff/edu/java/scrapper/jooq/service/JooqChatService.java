@@ -1,33 +1,29 @@
 package ru.tinkoff.edu.java.scrapper.jooq.service;
 
 import lombok.RequiredArgsConstructor;
-import org.jooq.DSLContext;
-import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.Chat;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatRecord;
 import ru.tinkoff.edu.java.scrapper.inteface.service.ChatService;
+import ru.tinkoff.edu.java.scrapper.jooq.repository.JooqChatRepository;
 
 import java.util.Collection;
 
 @RequiredArgsConstructor
 public class JooqChatService implements ChatService<ChatRecord> {
 
-    private final DSLContext dslContext;
-    private final ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Chat chatTable;
+    private final JooqChatRepository jooqChatRepository;
 
     @Override
     public void register(long tgChatId) {
-        dslContext.insertInto(chatTable).values(new Chat(tgChatId)).execute();
+        jooqChatRepository.register(tgChatId);
     }
 
     @Override
     public void unregister(long tgChatId) {
-        dslContext.deleteFrom(chatTable).where(chatTable.CHAT_ID.eq(tgChatId)).execute();
+        jooqChatRepository.unregister(tgChatId);
     }
 
     @Override
     public Collection<ChatRecord> getAll() {
-        return dslContext
-                .selectFrom(chatTable)
-                .fetch();
+        return jooqChatRepository.getAll();
     }
 }
