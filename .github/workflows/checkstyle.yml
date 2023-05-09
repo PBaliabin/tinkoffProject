@@ -2,6 +2,10 @@ name: CheckStyle_CI
 
 on:
   push:
+    paths:
+      - "project/**"
+    branches:
+      - 'hw1'
 
 jobs:
   build:
