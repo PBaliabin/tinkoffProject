@@ -1,11 +1,13 @@
-package ru.tinkoff.edu.java.bot.service.wrapper;
+package ru.tinkoff.edu.java.bot.wrapper;
 
+import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.bot.model.dto.GithubLink;
 
 import java.util.List;
 
+@Component
 public class GithubLinkWrapper {
-    public static String makeMessage(List<GithubLink> outdatedGithubLinks, List<GithubLink> updatedGithubLinks) {
+    public String makeMessage(List<GithubLink> outdatedGithubLinks, List<GithubLink> updatedGithubLinks) {
         StringBuilder stringBuilder = new StringBuilder("\tfor Github links:\n");
         for (int i = 0; i < outdatedGithubLinks.size(); i++) {
             stringBuilder.append("\t\tlink ").append(outdatedGithubLinks.get(i).getLink()).append(" has changes:\n");

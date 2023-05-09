@@ -33,8 +33,19 @@ services:
     networks:
       - backend
 
+  rabbit-mq:
+    image: rabbitmq:3-management
+    volumes:
+      - rabbit-mq:/data/rabbitMQ
+    networks:
+      - backend
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
 networks:
   backend:
 
 volumes:
   postgres:
+  rabbit-mq:

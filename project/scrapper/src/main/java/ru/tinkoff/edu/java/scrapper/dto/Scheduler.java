@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.configuration;
+package ru.tinkoff.edu.java.scrapper.dto;
 
 import java.time.Duration;
 

@@ -2,7 +2,7 @@ package ru.tinkoff.edu.java.bot.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.tinkoff.edu.java.bot.service.handler.CommandProcessingUnit;
+import ru.tinkoff.edu.java.bot.handler.CommandProcessingUnit;
 
 import java.util.List;
 import java.util.Objects;

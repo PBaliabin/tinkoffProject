@@ -4,9 +4,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import ru.tinkoff.edu.java.scrapper.client.GitHubClientService;
-import ru.tinkoff.edu.java.scrapper.client.StackOverflowClientService;
-import ru.tinkoff.edu.java.scrapper.client.TgBotClientService;
+import ru.tinkoff.edu.java.scrapper.inteface.service.MessageService;
+import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
+import ru.tinkoff.edu.java.scrapper.service.TgBotClientService;
 import ru.tinkoff.edu.java.scrapper.dto.entity.ChatToLink;
 import ru.tinkoff.edu.java.scrapper.dto.entity.GithubLink;
 import ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink;
@@ -77,7 +78,7 @@ public class JdbcAccessConfiguration {
                                        StackoverflowLinkService<StackoverflowLink> stackoverflowLinkService,
                                        GitHubClientService gitHubClientService,
                                        StackOverflowClientService stackOverflowClientService,
-                                       TgBotClientService tgBotClientService,
+                                       MessageService messageService,
                                        JdbcGithubLinkConverter jdbcGithubLinkConverter,
                                        JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter) {
         return new JdbcLinkUpdater(
@@ -86,7 +87,7 @@ public class JdbcAccessConfiguration {
                 stackoverflowLinkService,
                 gitHubClientService,
                 stackOverflowClientService,
-                tgBotClientService,
+                messageService,
                 jdbcGithubLinkConverter,
                 jdbcStackoverflowLinkConverter);
     }

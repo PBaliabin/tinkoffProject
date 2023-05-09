@@ -1,8 +1,9 @@
-package ru.tinkoff.edu.java.bot;
+package ru.tinkoff.edu.java.bot.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ru.tinkoff.edu.java.bot.interfaces.ScrapperClient;
 import ru.tinkoff.edu.java.bot.model.request.AddLinkRequest;
 import ru.tinkoff.edu.java.bot.model.response.LinkResponse;
 import ru.tinkoff.edu.java.bot.model.response.ListLinksResponse;

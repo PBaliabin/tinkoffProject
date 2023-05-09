@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.service.handler;
+package ru.tinkoff.edu.java.bot.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

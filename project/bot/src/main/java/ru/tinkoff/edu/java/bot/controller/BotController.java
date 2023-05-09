@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.service.controller;
+package ru.tinkoff.edu.java.bot.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
