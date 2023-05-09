@@ -24,6 +24,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: install scrapper
+        run: mvn install -pl scrapper -am -DskipTests -e
         
       - name: build scrapper
         run: mvn package -pl scrapper -am -DskipTests -e

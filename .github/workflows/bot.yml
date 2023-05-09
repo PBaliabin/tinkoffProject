@@ -24,6 +24,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: install bot
+        run: mvn install -pl bot -am -DskipTests -e
         
       - name: build bot
         run: mvn package -am -DskipTests -e
