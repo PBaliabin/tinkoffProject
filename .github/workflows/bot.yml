@@ -16,8 +16,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Build bot
+      - name: checkout head
         uses: actions/checkout@hw1
+        
+      - name: build bot
         run: mvn package -pl bot -am -DskipTests
 
       - name: Build Docker bot container

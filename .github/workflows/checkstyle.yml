@@ -4,9 +4,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check style
+      - name: checkout head
         uses: actions/checkout@hw1
+
+      - name: check style bot
         run: mvn -pl bot -am checkstyle:check
+
+      - name: check style scrapper
         run: mvn -pl scrapper -am checkstyle:check
+        
+      - name: check style link-parser  
         run: mvn -pl link-parser -am checkstyle:check
+
+      - name: check style scrapper-jooq
         run: mvn -pl scrapper-jooq -am checkstyle:check
