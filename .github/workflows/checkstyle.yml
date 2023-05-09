@@ -21,7 +21,7 @@ jobs:
           distribution: 'temurin'
 
       - name: check style bot
-        run: mvn -pl bot -am checkstyle:check
+        run: mvn -pl bot -am checkstyle:check -e
 
       - name: check style scrapper
         run: mvn -pl scrapper -am checkstyle:check
