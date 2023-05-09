@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout head
-        uses: actions/checkout@hw1
+        uses: actions/checkout@v3
 
       - name: check style bot
         run: mvn -pl bot -am checkstyle:check
