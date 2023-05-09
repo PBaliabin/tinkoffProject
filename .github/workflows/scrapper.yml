@@ -26,10 +26,10 @@ jobs:
           distribution: 'temurin'
 
       - name: install scrapper
-        run: mvn install -pl scrapper -am -DskipTests -e
+        run: mvn install -am -DskipTests -X
         
       - name: build scrapper
-        run: mvn package -pl scrapper -am -DskipTests -e
+        run: mvn package -am -DskipTests -X
 
       - name: Build Docker scrapper container
         run: docker build -t pash7e7/tinkoffProjectScrapperImage .
