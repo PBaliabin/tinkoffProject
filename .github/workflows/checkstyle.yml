@@ -1,0 +1,12 @@
+name: CheckStyle_CI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check style
+        uses: actions/checkout@hw1
+        run: mvn -pl bot -am checkstyle:check
+        run: mvn -pl scrapper -am checkstyle:check
+        run: mvn -pl link-parser -am checkstyle:check
+        run: mvn -pl scrapper-jooq -am checkstyle:check
