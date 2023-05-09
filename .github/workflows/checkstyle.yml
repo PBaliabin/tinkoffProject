@@ -20,8 +20,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: install package
+        run: mvn install package -DskipTests
+
       - name: check style bot
-        run: mvn -e -pl bot -am checkstyle:check
+        run: mvn -pl bot -am checkstyle:check
 
       - name: check style scrapper
         run: mvn -pl scrapper -am checkstyle:check
