@@ -5,7 +5,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-public interface StackoverflowLinkService<T1> {
+public interface StackoverflowLinkService<T> {
     String QUESTION_ID = "questionId";
     String SITE_STACKOVERFLOW = "stackoverflow";
 
@@ -13,7 +13,7 @@ public interface StackoverflowLinkService<T1> {
 
     void remove(URI url);
 
-    void update(T1 entityRecord);
+    void update(T entityRecord);
 
-    Collection<T1> getLinksByLastCheckTime(LocalDateTime threshold);
+    Collection<T> getLinksByLastCheckTime(LocalDateTime threshold);
 }

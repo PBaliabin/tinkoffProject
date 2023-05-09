@@ -12,12 +12,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UpdateProcessService {
 
-    public final String TG_CHAT_ID = "tgChatId";
-    public final String MESSAGE = "message";
+    public static final String TG_CHAT_ID = "tgChatId";
+    public static final String MESSAGE = "message";
 
     private final GithubLinkWrapper githubLinkWrapper;
     private final StackoverflowLinkWrapper stackoverflowLinkWrapper;
-    public Map<String, String> processUpdate(LinkUpdate linkUpdate){
+
+    public Map<String, String> processUpdate(LinkUpdate linkUpdate) {
         String githubLinksChanges = githubLinkWrapper.makeMessage(
                 linkUpdate.getOutdatedGithubLinks(),
                 linkUpdate.getUpdatedGithubLinks());
@@ -26,7 +27,10 @@ public class UpdateProcessService {
                 linkUpdate.getUpdatedStackoverflowLinks());
 
         return Map.of(
-                "tgChatId", linkUpdate.getTgChatId().toString(),
-                "message", githubLinksChanges + stackoverflowLinksChanges);
+                "tgChatId",
+                linkUpdate.getTgChatId().toString(),
+                "message",
+                githubLinksChanges
+                        + stackoverflowLinksChanges);
     }
 }

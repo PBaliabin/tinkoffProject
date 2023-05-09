@@ -2,12 +2,12 @@ package ru.tinkoff.edu.java.scrapper.jdbc.service;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 import ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.service.StackoverflowLinkService;
 import ru.tinkoff.edu.java.scrapper.jdbc.repository.JdbcStackoverflowLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jdbc.util.converter.JdbcStackoverflowLinkConverter;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -24,10 +24,13 @@ public class JdbcStackoverflowLinkService implements StackoverflowLinkService<St
     @Override
     public void add(URI url) {
         Map<String, String> parsedLink = Parser.parseLink(url.toString());
-        StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion(parsedLink.get(
+        StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion(
+                parsedLink.get(
                         StackoverflowLinkService.QUESTION_ID),
                 StackoverflowLinkService.SITE_STACKOVERFLOW);
-        StackoverflowLink stackoverflowLink = jdbcStackoverflowLinkConverter.makeStackoverflowLink(url.toString(), stackoverflowResponse);
+        StackoverflowLink stackoverflowLink = jdbcStackoverflowLinkConverter.makeStackoverflowLink(
+                url.toString(),
+                stackoverflowResponse);
         jdbcStackoverflowLinkRepository.add(stackoverflowLink);
     }
 

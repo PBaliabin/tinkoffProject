@@ -19,28 +19,28 @@ public class JdbcGithubLinkRepository {
     private final JdbcGithubLinkConverter jdbcGithubLinkConverter;
 
     public void add(GithubLink githubLink) {
-        String sqlQuery = "INSERT INTO github_link VALUES(" +
-                ":link," +
-                ":repositoryId," +
-                ":name," +
-                ":fullName," +
-                ":lastActivityTime," +
-                ":forksCount," +
-                ":openIssuesCount," +
-                ":lastCheckTime)";
+        String sqlQuery = "INSERT INTO github_link VALUES("
+                + ":link,"
+                + ":repositoryId,"
+                + ":name,"
+                + ":fullName,"
+                + ":lastActivityTime,"
+                + ":forksCount,"
+                + ":openIssuesCount,"
+                + ":lastCheckTime)";
         namedParamJdbcTemplate.update(sqlQuery, jdbcGithubLinkConverter.makeGithubLinkTableQueryMap(githubLink));
     }
 
     public void update(GithubLink githubLink) {
-        String sqlQuery = "UPDATE github_link SET " +
-                "repository_id = :repositoryId," +
-                "name = :name," +
-                "full_name = :fullName," +
-                "last_activity_time = :lastActivityTime," +
-                "forks_count = :forksCount," +
-                "open_issues_count = :openIssuesCount," +
-                "last_check_time = :lastCheckTime" +
-                " WHERE link = :link";
+        String sqlQuery = "UPDATE github_link SET "
+                + "repository_id = :repositoryId,"
+                + "name = :name,"
+                + "full_name = :fullName,"
+                + "last_activity_time = :lastActivityTime,"
+                + "forks_count = :forksCount,"
+                + "open_issues_count = :openIssuesCount,"
+                + "last_check_time = :lastCheckTime"
+                + " WHERE link = :link";
         namedParamJdbcTemplate.update(sqlQuery, jdbcGithubLinkConverter.makeGithubLinkTableQueryMap(githubLink));
     }
 

@@ -1,7 +1,9 @@
 package ru.tinkoff.edu.java.bot.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class UntrackCommandProcessingUnit implements CommandProcessingUnit {
 
@@ -10,7 +12,7 @@ public class UntrackCommandProcessingUnit implements CommandProcessingUnit {
         if (!messageText.equals("/untrack")) {
             return null;
         }
-        System.out.println("attempt use unfinished command \"/untrack\"");
+        log.info("attempt use unfinished command \"/untrack\"");
         return "sorry, feature \"untrack\" is under construction";
     }
 }

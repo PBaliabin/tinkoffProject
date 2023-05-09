@@ -36,26 +36,38 @@ CREATE TABLE IF NOT EXISTS chat_to_link
     CONSTRAINT chat_to_link_pkey PRIMARY KEY (link, chat_id)
 );
 
-CREATE OR REPLACE FUNCTION updateGithubTableFunction() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION updateGithubTableFunction() RETURNS TRIGGER AS
+$$
 BEGIN
-    DELETE FROM github_link
-    WHERE (SELECT count(*) FROM chat_to_link WHERE link = old.link) = 0 AND link = old.link;
+    DELETE
+    FROM github_link
+    WHERE (SELECT count(*) FROM chat_to_link WHERE link = old.link) = 0
+      AND link = old.link;
     RETURN null;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION updateStackoverflowTableFunction() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION updateStackoverflowTableFunction() RETURNS TRIGGER AS
+$$
 BEGIN
-    DELETE FROM stackoverflow_link
-    WHERE (SELECT count(*) FROM chat_to_link WHERE link = old.link) = 0 AND link = old.link;
+    DELETE
+    FROM stackoverflow_link
+    WHERE (SELECT count(*) FROM chat_to_link WHERE link = old.link) = 0
+      AND link = old.link;
     RETURN null;
 END;
 $$ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS updateGithubTable ON chat_to_link;
-CREATE TRIGGER updateGithubTable AFTER DELETE ON chat_to_link
-FOR EACH ROW EXECUTE  PROCEDURE updateGithubTableFunction();
+CREATE TRIGGER updateGithubTable
+    AFTER DELETE
+    ON chat_to_link
+    FOR EACH ROW
+EXECUTE PROCEDURE updateGithubTableFunction();
 
 DROP TRIGGER IF EXISTS updateStackoverflowTable ON chat_to_link;
-CREATE TRIGGER updateStackoverflowTable AFTER DELETE ON chat_to_link
-FOR EACH ROW EXECUTE  PROCEDURE updateStackoverflowTableFunction();
+CREATE TRIGGER updateStackoverflowTable
+    AFTER DELETE
+    ON chat_to_link
+    FOR EACH ROW
+EXECUTE PROCEDURE updateStackoverflowTableFunction();

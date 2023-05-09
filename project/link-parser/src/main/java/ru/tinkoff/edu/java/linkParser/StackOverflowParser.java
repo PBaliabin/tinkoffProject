@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.linkParser;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class StackOverflowParser implements LinkParser {
     private static final String DOMAIN = "stackoverflow.com";

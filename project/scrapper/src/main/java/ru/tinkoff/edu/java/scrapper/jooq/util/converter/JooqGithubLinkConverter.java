@@ -31,7 +31,7 @@ public class JooqGithubLinkConverter {
         );
     }
 
-    public ru.tinkoff.edu.java.scrapper.domain.jooq.tables.pojos.GithubLink makeGithubLink(GithubLinkRecord githubLinkRecord) {
+    public GithubLink makeGithubLink(GithubLinkRecord githubLinkRecord) {
         return new GithubLink(
                 githubLinkRecord.getLink(),
                 githubLinkRecord.getRepositoryId(),
