@@ -20,6 +20,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: change directory
+        run: cd project
+
       - name: install package
         run: mvn install package -DskipTests
 
