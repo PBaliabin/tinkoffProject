@@ -26,7 +26,7 @@ jobs:
           distribution: 'temurin'
         
       - name: build bot
-        run: mvn package -am -DskipTests
+        run: mvn package -am -DskipTests -e
 
       - name: Build Docker bot container
         run: docker build -t pash7e7/tinkoffProjectBotImage .
