@@ -39,12 +39,12 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.jooq/jooq-postgres-extensions &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.jooq</groupId>-->
-<!--            <artifactId>jooq-postgres-extensions</artifactId>-->
-<!--            <version>3.18.3</version>-->
-<!--        </dependency>-->
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.jooq/jooq-postgres-extensions &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.jooq</groupId>-->
+        <!--            <artifactId>jooq-postgres-extensions</artifactId>-->
+        <!--            <version>3.18.3</version>-->
+        <!--        </dependency>-->
     </dependencies>
 
 </project>

@@ -29,7 +29,8 @@ public class LiquibaseIntegrationTest extends IntegrationEnvironment {
 
         Connection connection = POSTGRE_SQL_CONTAINER.createConnection("");
 
-        Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+        Database database =
+                DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
         Liquibase liquibase = new liquibase.Liquibase("master.xml", new ClassLoaderResourceAccessor(), database);
         liquibase.update(new Contexts(), new LabelExpression());
 

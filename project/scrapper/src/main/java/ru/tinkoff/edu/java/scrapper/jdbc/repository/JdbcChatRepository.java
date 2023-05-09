@@ -13,18 +13,19 @@ import java.util.Map;
 public class JdbcChatRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final String CHAT_ID = "chatId";
 
     public void register(Chat chat) {
         String sqlQuery = "INSERT INTO chat VALUES(:chatId)";
         Map<String, Object> map = new HashMap<>();
-        map.put("chatId", chat.getChatId());
+        map.put(CHAT_ID, chat.getChatId());
         namedParameterJdbcTemplate.update(sqlQuery, map);
     }
 
     public void unregister(Chat chat) {
         String sqlQuery = "DELETE FROM chat WHERE chat_id = :chatId";
         Map<String, Object> map = new HashMap<>();
-        map.put("chatId", chat.getChatId());
+        map.put(CHAT_ID, chat.getChatId());
         namedParameterJdbcTemplate.update(sqlQuery, map);
     }
 

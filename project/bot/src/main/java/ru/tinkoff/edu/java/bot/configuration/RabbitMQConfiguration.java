@@ -1,6 +1,10 @@
 package ru.tinkoff.edu.java.bot.configuration;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.ClassMapper;
@@ -19,42 +23,57 @@ import java.util.Map;
 @Configuration
 public class RabbitMQConfiguration {
 
+    private static final String DQL_SUFFIX = ".dlq";
+
     @Bean
-    public Queue queue(@Qualifier("queueName") String queueName,
-                       @Qualifier("exchangeName") String exchangeName){
+    public Queue queue(
+            @Qualifier("queueName") String queueName,
+            @Qualifier("exchangeName") String exchangeName) {
         return QueueBuilder
                 .durable(queueName)
-                .withArgument("x-dead-letter-exchange", exchangeName + ".dlq")
-                .withArgument("x-dead-letter-routing-key", queueName + ".dlq")
+                .withArgument("x-dead-letter-exchange",
+                              exchangeName
+                                      + DQL_SUFFIX)
+                .withArgument("x-dead-letter-routing-key",
+                              queueName
+                                      + DQL_SUFFIX)
                 .build();
     }
+
     @Bean
-    public DirectExchange directExchange(@Qualifier("exchangeName") String exchangeName){
+    public DirectExchange directExchange(@Qualifier("exchangeName") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
+
     @Bean
-    public Binding binding(Queue queue,
-                           DirectExchange directExchange,
-                           @Qualifier("routingKey") String routingKey){
+    public Binding binding(
+            Queue queue,
+            DirectExchange directExchange,
+            @Qualifier("routingKey") String routingKey) {
         return BindingBuilder.bind(queue).to(directExchange).with(routingKey);
     }
 
     @Bean
-    public Queue queueDlq(@Qualifier("queueName") String queueName){
-        return QueueBuilder.durable(queueName + ".dlq").build();
+    public Queue queueDlq(@Qualifier("queueName") String queueName) {
+        return QueueBuilder.durable(queueName
+                                            + DQL_SUFFIX).build();
     }
+
     @Bean
-    public DirectExchange directExchangeDlq(@Qualifier("exchangeName") String exchangeName){
-        return new DirectExchange(exchangeName + ".dlq");
+    public DirectExchange directExchangeDlq(@Qualifier("exchangeName") String exchangeName) {
+        return new DirectExchange(exchangeName
+                                          + DQL_SUFFIX);
     }
+
     @Bean
-    public Binding bindingDlq(@Qualifier("queueDlq") Queue queueDlq,
-                              @Qualifier("directExchangeDlq") DirectExchange directExchangeDlq){
+    public Binding bindingDlq(
+            @Qualifier("queueDlq") Queue queueDlq,
+            @Qualifier("directExchangeDlq") DirectExchange directExchangeDlq) {
         return BindingBuilder.bind(queueDlq).to(directExchangeDlq).withQueueName();
     }
 
     @Bean
-    public ClassMapper classMapper(){
+    public ClassMapper classMapper() {
         Map<String, Class<?>> mappings = new HashMap<>();
         mappings.put("ru.tinkoff.edu.java.scrapper.dto.LinkUpdate", LinkUpdate.class);
 
@@ -65,7 +84,7 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
-    public MessageConverter jsonMessageConverter(ClassMapper classMapper){
+    public MessageConverter jsonMessageConverter(ClassMapper classMapper) {
         Jackson2JsonMessageConverter jsonConverter = new Jackson2JsonMessageConverter();
         jsonConverter.setClassMapper(classMapper);
         return jsonConverter;

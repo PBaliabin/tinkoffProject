@@ -2,11 +2,11 @@ package ru.tinkoff.edu.java.linkParser;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class Parser {
+public final class Parser {
+
+    private Parser() {}
 
     public static Map<String, String> parseLink(String link) {
 

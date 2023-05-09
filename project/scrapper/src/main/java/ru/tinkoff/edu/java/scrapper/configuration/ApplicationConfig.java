@@ -26,23 +26,23 @@ public record ApplicationConfig(@NotNull String test,
     }
 
     @Bean
-    public String queueName(){
+    public String queueName() {
         return rabbitConfigurationParameters.queueName();
     }
 
     @Bean
-    public String exchangeName(){
+    public String exchangeName() {
         return rabbitConfigurationParameters.exchangeName();
     }
 
     @Bean
-    public String routingKey(){
+    public String routingKey() {
         return rabbitConfigurationParameters.routingKey();
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "app", name = "use-queue", havingValue = "false")
-    public TgBotClientService tgBotClientService(TgBotClient tgBotClient){
+    public TgBotClientService tgBotClientService(TgBotClient tgBotClient) {
         return new TgBotClientService(tgBotClient);
     }
 }

@@ -87,7 +87,8 @@ public class JpaLinkTest extends IntegrationEnvironment {
     public void updateGithubLinkTest() {
         GithubLink githubLink = makeGithubLinkWithId(1);
         jpaGithubLinkRepository.save(githubLink);
-        githubLink.setLastActivityTime(new Timestamp(System.currentTimeMillis() + 1000).toLocalDateTime());
+        githubLink.setLastActivityTime(new Timestamp(System.currentTimeMillis()
+                                                             + 1000).toLocalDateTime());
         Assertions.assertThat(jpaGithubLinkRepository.save(githubLink)).isEqualTo(githubLink);
     }
 
@@ -145,7 +146,8 @@ public class JpaLinkTest extends IntegrationEnvironment {
     public void updateStackoverflowLinkTest() {
         StackoverflowLink stackoverflowLink = makeStackoverflowLinkWithId(1);
         jpaStackoverflowLinkRepository.save(stackoverflowLink);
-        stackoverflowLink.setLastActivityTime(new Timestamp(System.currentTimeMillis() + 1000).toLocalDateTime());
+        stackoverflowLink.setLastActivityTime(new Timestamp(System.currentTimeMillis()
+                                                                    + 1000).toLocalDateTime());
         Assertions.assertThat(jpaStackoverflowLinkRepository.save(stackoverflowLink)).isEqualTo(stackoverflowLink);
     }
 
@@ -200,32 +202,43 @@ public class JpaLinkTest extends IntegrationEnvironment {
 
         Connection connection = POSTGRE_SQL_CONTAINER.createConnection("");
 
-        Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+        Database database =
+                DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
         Liquibase liquibase = new Liquibase("master.xml", new ClassLoaderResourceAccessor(), database);
         liquibase.update(new Contexts(), new LabelExpression());
     }
 
-    private GithubLink makeGithubLinkWithId(int id){
+    private GithubLink makeGithubLinkWithId(int id) {
         return new GithubLink(
-                "url" + id,
-                "repo" + id,
-                "name" + id,
-                "fullName" + id,
+                "url"
+                        + id,
+                "repo"
+                        + id,
+                "name"
+                        + id,
+                "fullName"
+                        + id,
                 new Timestamp(System.currentTimeMillis()).toLocalDateTime(),
-                3 * id,
-                4 * id,
+                3
+                        * id,
+                4
+                        * id,
                 new Timestamp(System.currentTimeMillis()).toLocalDateTime()
         );
     }
 
-    private StackoverflowLink makeStackoverflowLinkWithId(int id){
-        return  new StackoverflowLink(
-                "url" + id,
-                100 + id,
-                101 + id,
+    private StackoverflowLink makeStackoverflowLinkWithId(int id) {
+        return new StackoverflowLink(
+                "url"
+                        + id,
+                100
+                        + id,
+                101
+                        + id,
                 new Timestamp(System.currentTimeMillis()).toLocalDateTime(),
                 false,
-                3 * id,
+                3
+                        * id,
                 new Timestamp(System.currentTimeMillis()).toLocalDateTime()
         );
     }

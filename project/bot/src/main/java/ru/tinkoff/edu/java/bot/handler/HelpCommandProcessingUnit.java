@@ -18,8 +18,8 @@ public class HelpCommandProcessingUnit implements CommandProcessingUnit {
             return null;
         }
 
-        return "Ниже описаны все команды, поддерживаемые данным ботом:\n\n" +
-                this.getCommandListAsString();
+        return "Ниже описаны все команды, поддерживаемые данным ботом:\n\n"
+                + this.getCommandListAsString();
     }
 
     private String getCommandListAsString() {

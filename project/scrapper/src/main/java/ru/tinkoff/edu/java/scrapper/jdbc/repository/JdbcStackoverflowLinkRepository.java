@@ -19,27 +19,31 @@ public class JdbcStackoverflowLinkRepository {
     private final JdbcStackoverflowLinkConverter jdbcStackoverflowLinkConverter;
 
     public void add(StackoverflowLink stackoverflowLink) {
-        String sqlQuery = "INSERT INTO stackoverflow_link VALUES(" +
-                ":link," +
-                ":quotaMax," +
-                ":quotaRemaining," +
-                ":lastActivityTime," +
-                ":isAnswered," +
-                ":answerCount," +
-                ":lastCheckTime)";
-        namedParamJdbcTemplate.update(sqlQuery, jdbcStackoverflowLinkConverter.makeStackoverflowTableQueryMap(stackoverflowLink));
+        String sqlQuery = "INSERT INTO stackoverflow_link VALUES("
+                + ":link,"
+                + ":quotaMax,"
+                + ":quotaRemaining,"
+                + ":lastActivityTime,"
+                + ":isAnswered,"
+                + ":answerCount,"
+                + ":lastCheckTime)";
+        namedParamJdbcTemplate.update(
+                sqlQuery,
+                jdbcStackoverflowLinkConverter.makeStackoverflowTableQueryMap(stackoverflowLink));
     }
 
     public void update(StackoverflowLink stackoverflowLink) {
-        String sqlQuery = "UPDATE stackoverflow_link SET " +
-                "quota_max = :quotaMax," +
-                "quota_remaining = :quotaRemaining," +
-                "last_activity_time = :lastActivityTime," +
-                "is_answered = :isAnswered," +
-                "answer_count = :answerCount," +
-                "last_check_time = :lastCheckTime" +
-                " WHERE link = :link";
-        namedParamJdbcTemplate.update(sqlQuery, jdbcStackoverflowLinkConverter.makeStackoverflowTableQueryMap(stackoverflowLink));
+        String sqlQuery = "UPDATE stackoverflow_link SET "
+                + "quota_max = :quotaMax,"
+                + "quota_remaining = :quotaRemaining,"
+                + "last_activity_time = :lastActivityTime,"
+                + "is_answered = :isAnswered,"
+                + "answer_count = :answerCount,"
+                + "last_check_time = :lastCheckTime"
+                + " WHERE link = :link";
+        namedParamJdbcTemplate.update(
+                sqlQuery,
+                jdbcStackoverflowLinkConverter.makeStackoverflowTableQueryMap(stackoverflowLink));
     }
 
     public void remove(URI url) {

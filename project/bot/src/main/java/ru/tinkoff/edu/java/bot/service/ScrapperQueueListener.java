@@ -17,10 +17,10 @@ public class ScrapperQueueListener {
     @RabbitHandler
     public void receiver(LinkUpdate linkUpdate) {
         Map<String, String> processedUpdate = updateProcessService.processUpdate(linkUpdate);
-        String logMessage = "\nTelegram chat with id=" +
-                processedUpdate.get(updateProcessService.TG_CHAT_ID) +
-                " has following updates:\n" +
-                processedUpdate.get(updateProcessService.MESSAGE);
+        String logMessage = "\nTelegram chat with id="
+                + processedUpdate.get(updateProcessService.TG_CHAT_ID)
+                + " has following updates:\n"
+                + processedUpdate.get(updateProcessService.MESSAGE);
         log.info(logMessage);
     }
 }

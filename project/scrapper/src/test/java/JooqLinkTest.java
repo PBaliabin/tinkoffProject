@@ -14,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tinkoff.edu.java.scrapper.ScrapperApplication;
-import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
-import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.ChatRecord;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.GithubLinkRecord;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.StackoverflowLinkRecord;
@@ -26,6 +24,8 @@ import ru.tinkoff.edu.java.scrapper.jooq.service.JooqGitHubLinkService;
 import ru.tinkoff.edu.java.scrapper.jooq.service.JooqStackoverflowLinkService;
 import ru.tinkoff.edu.java.scrapper.jooq.util.converter.JooqGithubLinkConverter;
 import ru.tinkoff.edu.java.scrapper.jooq.util.converter.JooqStackoverflowLinkConverter;
+import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 
 import java.net.URI;
 import java.sql.Connection;
@@ -57,15 +57,18 @@ public class JooqLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void addStackoverflowLinkTest() {
-        jooqStackoverflowLinkService.add(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
+        jooqStackoverflowLinkService.add(URI.create(
+                "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
     }
 
     @Test
     @Transactional
     @Rollback
     public void updateStackoverflowTest() {
-        jooqStackoverflowLinkService.add(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
-        StackoverflowResponse stackoverflowResponse = stackOverflowClientService.getQuestion("1642028", "stackoverflow");
+        jooqStackoverflowLinkService.add(URI.create(
+                "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
+        StackoverflowResponse stackoverflowResponse =
+                stackOverflowClientService.getQuestion("1642028", "stackoverflow");
         StackoverflowLinkRecord stackoverflowLinkRecord = jooqStackoverflowLinkConverter.makeStackoverflowLinkRecord(
                 "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c",
                 stackoverflowResponse);
@@ -76,7 +79,8 @@ public class JooqLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void deleteStackoverflowTest() {
-        jooqStackoverflowLinkService.add(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
+        jooqStackoverflowLinkService.add(URI.create(
+                "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
         jooqGitHubLinkService.remove(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
     }
 
@@ -84,7 +88,8 @@ public class JooqLinkTest extends IntegrationEnvironment {
     @Transactional
     @Rollback
     public void getStackoverflowLinkByLastCheckTimeTest() {
-        jooqStackoverflowLinkService.add(URI.create("https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
+        jooqStackoverflowLinkService.add(URI.create(
+                "https://stackoverflow.com/questions/1642028/what-is-the-operator-in-c"));
 
         List<StackoverflowLinkRecord> links = (List<StackoverflowLinkRecord>) jooqStackoverflowLinkService
                 .getLinksByLastCheckTime(new Timestamp(System.currentTimeMillis()).toLocalDateTime());
@@ -172,7 +177,8 @@ public class JooqLinkTest extends IntegrationEnvironment {
 
         Connection connection = POSTGRE_SQL_CONTAINER.createConnection("");
 
-        Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
+        Database database =
+                DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
         Liquibase liquibase = new liquibase.Liquibase("master.xml", new ClassLoaderResourceAccessor(), database);
         liquibase.update(new Contexts(), new LabelExpression());
     }

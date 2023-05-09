@@ -1,0 +1,44 @@
+name: Scrapper_CI
+
+on:
+  pull_request:
+    paths:
+      - "project/scrapper/**"
+    branches:
+      - 'hw1'
+  push:
+    paths:
+      - "project/scrapper/**"
+    branches:
+      - 'hw1'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build scrapper
+        uses: actions/checkout@hw1
+        run: mvn package -pl scrapper -am -DskipTests
+
+      - name: Build Docker scrapper container
+        run: docker build -t pash7e7/tinkoffProjectScrapperImage .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@hw1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@hw1
+        with:
+          images: pash7e7/tinkoffProjectScrapperImage
+
+      - name: Push Docker image
+        uses: docker/build-push-action@hw1
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

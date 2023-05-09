@@ -1,6 +1,10 @@
 package ru.tinkoff.edu.java.scrapper.configuration;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -14,25 +18,36 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfiguration {
 
     @Bean
-    public Queue queue(@Qualifier("queueName") String queueName,
-                       @Qualifier("exchangeName") String exchangeName){
+    public Queue queue(
+            @Qualifier("queueName") String queueName,
+            @Qualifier("exchangeName") String exchangeName) {
+        String dlqSuffix = ".dlq";
         return QueueBuilder
                 .durable(queueName)
-                .withArgument("x-dead-letter-exchange", exchangeName + ".dlq")
-                .withArgument("x-dead-letter-routing-key", queueName + ".dlq")
+                .withArgument(
+                        "x-dead-letter-exchange",
+                        exchangeName
+                                + dlqSuffix)
+                .withArgument(
+                        "x-dead-letter-routing-key",
+                        queueName
+                                + dlqSuffix)
                 .build();
     }
+
     @Bean
-    public DirectExchange directExchange(@Qualifier("exchangeName") String exchangeName){
+    public DirectExchange directExchange(@Qualifier("exchangeName") String exchangeName) {
         return new DirectExchange(exchangeName);
     }
+
     @Bean
-    public Binding binding(Queue queue,
-                           DirectExchange directExchange,
-                           @Qualifier("routingKey") String routingKey){
+    public Binding binding(
+            Queue queue,
+            DirectExchange directExchange,
+            @Qualifier("routingKey") String routingKey) {
         return BindingBuilder.bind(queue).to(directExchange).with(routingKey);
     }
-    
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
