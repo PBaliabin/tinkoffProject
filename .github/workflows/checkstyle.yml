@@ -20,11 +20,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: change directory
-        run: cd project
-
       - name: install package
-        run: mvn install package -DskipTests
+        run: cd project && mvn install package -DskipTests
 
       - name: check style bot
         run: mvn -pl bot -am checkstyle:check
