@@ -12,6 +12,11 @@ on:
     branches:
       - 'hw1'
 
+defaults:
+  run:
+    shell: bash
+    working-directory: project/bot/
+
 jobs:
   build:
     runs-on: ubuntu-latest
