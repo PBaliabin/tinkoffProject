@@ -34,7 +34,7 @@ jobs:
         run: mvn install package -DskipTests
 
       - name: build bot
-        run: mvn package -pl bot -am -DskipTests -e
+        run: mvn package -am -DskipTests -e
 
       - name: Build Docker bot container
         run: docker build -t pash7e7/tinkoffProjectBotImage .
