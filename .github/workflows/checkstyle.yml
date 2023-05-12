@@ -7,10 +7,6 @@ on:
     branches:
       - 'hw1'
 
-defaults:
-  run:
-    working-directory: ./project/
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,11 +21,12 @@ jobs:
           distribution: 'temurin'
 
       - name: generate classes
-        working-directory: ./scrapper-jooq
+        working-directory: project/scrapper-jooq
         run: mvn test
 
       - name: install package
-        run: mvn install package -DskipTests
+        working-directory: project
+        run: mvn clean install -DskipTests
 
       - name: check style bot
         run: mvn -pl bot -am checkstyle:check

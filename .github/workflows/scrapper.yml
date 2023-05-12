@@ -12,10 +12,6 @@ on:
     branches:
       - 'hw1'
 
-defaults:
-  run:
-    working-directory: ./project/
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,26 +26,23 @@ jobs:
           distribution: 'temurin'
 
       - name: generate classes
-        working-directory: ./scrapper-jooq
+        working-directory: project/scrapper-jooq
         run: mvn test
       
       - name: install link-parser
-        working-directory: ./link-parser
-        run: mvn install package -DskipTests
+        working-directory: project/link-parser
+        run: mvn clean install -DskipTests
 
       - name: install project
-        run: mvn install package -DskipTests
+        working-directory: project
+        run: mvn clean install -DskipTests
 
       - name: install scrapper
-        working-directory: ./scrapper
-        run: mvn install package -DskipTests
-
-      - name: build scrapper
-        working-directory: ./project/scrapper
-        run: mvn package -am -DskipTests -X
+        working-directory: project/scrapper
+        run: mvn clean install -DskipTests
 
       - name: Build Docker scrapper container
-        working-directory: ./scrapper
+        working-directory: project/scrapper
         run: docker build -t pash7e7/tinkoff-project-scrapper-image .
 
       - name: Log in to Docker Hub
