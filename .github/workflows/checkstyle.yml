@@ -7,6 +7,10 @@ on:
     branches:
       - 'hw1'
 
+defaults:
+  run:
+    working-directory: project
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,7 +29,6 @@ jobs:
         run: mvn test
 
       - name: install package
-        working-directory: project
         run: mvn clean install -DskipTests
 
       - name: install bot
