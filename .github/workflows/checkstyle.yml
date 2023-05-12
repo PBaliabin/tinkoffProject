@@ -20,8 +20,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: install scrapper-jooq
+        working-directory: ./project/scrapper-jooq
+        run: mvn install package -DskipTests
+
+      - name: generate classes
+        working-directory: ./project/scrapper-jooq
+        run: mvn test
+
       - name: install package
         run: cd project && mvn install package -DskipTests
+        with
 
       - name: check style bot
         run: mvn -pl bot -am checkstyle:check

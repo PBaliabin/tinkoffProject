@@ -204,10 +204,10 @@
                 <artifactId>jooq</artifactId>
                 <version>${org.jooq.version}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.jooq/jooq-codegen -->
+            <!-- https://mvnrepository.com/artifact/org.jooq/jooq-app.codegen -->
             <dependency>
                 <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen</artifactId>
+                <artifactId>jooq-app.codegen</artifactId>
                 <version>${org.jooq.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.jooq/jooq-meta-extensions-liquibase -->

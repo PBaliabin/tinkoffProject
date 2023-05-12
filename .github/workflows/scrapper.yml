@@ -25,14 +25,21 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: install package
-        run: cd project && mvn install package -DskipTests
+      - name: generate classes
+        working-directory: ./project/scrapper-jooq
+        run: mvn test
         
+      - name: install scrapper
+        working-directory: ./project/scrapper
+        run: mvn install package -DskipTests
+
       - name: build scrapper
-        run: mvn package -pl scrapper -am -DskipTests -X
+        working-directory: ./project/scrapper
+        run: mvn package -am -DskipTests -X
 
       - name: Build Docker scrapper container
-        run: docker build -t pash7e7/tinkoffProjectScrapperImage .
+        working-directory: ./project/scrapper
+        run: docker build -t pash7e7/tinkoff-project-scrapper-image .
 
       - name: Log in to Docker Hub
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
@@ -40,16 +47,25 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: pash7e7/tinkoffProjectScrapperImage
+          images: | 
+            pash7e7/tinkoff-project-scrapper-image
+            ghcr.io/${{ github.repository }}
 
       - name: Push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: .
+          context: ./project/scrapper/
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
