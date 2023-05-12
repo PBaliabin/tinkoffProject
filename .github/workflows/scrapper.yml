@@ -28,7 +28,14 @@ jobs:
       - name: generate classes
         working-directory: ./project/scrapper-jooq
         run: mvn test
-        
+      
+      - name: install link-parser
+        working-directory: ./project/link-parser
+        run: mvn install package -DskipTests
+
+      - name: install project
+        run: mvn install package -DskipTests
+
       - name: install scrapper
         working-directory: ./project/scrapper
         run: mvn install package -DskipTests
