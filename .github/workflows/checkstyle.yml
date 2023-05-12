@@ -28,6 +28,22 @@ jobs:
         working-directory: project
         run: mvn clean install -DskipTests
 
+      - name: install bot
+        working-directory: project/bot
+        run: mvn clean install -DskipTests
+
+      - name: install scrapper
+        working-directory: project/scrapper
+        run: mvn clean install -DskipTests
+
+      - name: install scrapper-jooq
+        working-directory: project/scrapper-jooq
+        run: mvn clean install -DskipTests
+
+      - name: install link-parser
+        working-directory: project/link-parser
+        run: mvn clean install -DskipTests
+
       - name: check style bot
         run: mvn -pl bot -am checkstyle:check
 
