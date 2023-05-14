@@ -1,0 +1,60 @@
+name: CheckStyle_CI
+
+on:
+  push:
+    paths:
+      - "project/**"
+    branches:
+      - 'hw1'
+
+defaults:
+  run:
+    working-directory: project
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout head
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: generate classes
+        working-directory: project/scrapper-jooq
+        run: mvn test
+
+      - name: install package
+        run: mvn clean install -DskipTests
+
+      - name: install bot
+        working-directory: project/bot
+        run: mvn clean install -DskipTests
+
+      - name: install scrapper
+        working-directory: project/scrapper
+        run: mvn clean install -DskipTests
+
+      - name: install scrapper-jooq
+        working-directory: project/scrapper-jooq
+        run: mvn clean install -DskipTests
+
+      - name: install link-parser
+        working-directory: project/link-parser
+        run: mvn clean install -DskipTests
+
+      - name: check style bot
+        run: mvn -pl bot -am checkstyle:check
+
+      - name: check style scrapper
+        run: mvn -pl scrapper -am checkstyle:check
+        
+      - name: check style link-parser  
+        run: mvn -pl link-parser -am checkstyle:check
+
+      - name: check style scrapper-jooq
+        run: mvn -pl scrapper-jooq -am checkstyle:check

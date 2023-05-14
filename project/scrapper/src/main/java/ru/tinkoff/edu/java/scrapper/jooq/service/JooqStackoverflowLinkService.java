@@ -2,12 +2,12 @@ package ru.tinkoff.edu.java.scrapper.jooq.service;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.StackoverflowLinkRecord;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.service.StackoverflowLinkService;
 import ru.tinkoff.edu.java.scrapper.jooq.repository.JooqStackoverflowLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jooq.util.converter.JooqStackoverflowLinkConverter;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 
 import java.net.URI;
 import java.time.LocalDateTime;

@@ -14,35 +14,39 @@ import java.util.Map;
 @AllArgsConstructor
 public class JdbcChatToLinkRepository {
 
+    private static final String LINK = "link";
+    private static final String CHAT_ID = "chatId";
+
+
     private NamedParameterJdbcTemplate namedParamJdbcTemplate;
 
     public void addRow(Chat chat, URI url) {
         String sqlQuery = "INSERT INTO chat_to_link VALUES(:link, :chatId)";
         Map<String, Object> map = new HashMap<>();
-        map.put("link", url.toString());
-        map.put("chatId", chat.getChatId());
+        map.put(LINK, url.toString());
+        map.put(CHAT_ID, chat.getChatId());
         namedParamJdbcTemplate.update(sqlQuery, map);
     }
 
     public void deleteRow(Chat chat, URI url) {
         String sqlQuery = "DELETE FROM chat_to_link WHERE link = :link AND chat_id = :chatId";
         Map<String, Object> map = new HashMap<>();
-        map.put("link", url.toString());
-        map.put("chatId", chat.getChatId());
+        map.put(LINK, url.toString());
+        map.put(CHAT_ID, chat.getChatId());
         namedParamJdbcTemplate.update(sqlQuery, map);
     }
 
     public List<ChatToLink> getAllLinksByChat(Chat chat) {
         String sqlQuery = "SELECT *  FROM chat_to_link WHERE chat_id = :chatId";
         Map<String, Object> map = new HashMap<>();
-        map.put("chatId", chat.getChatId());
+        map.put(CHAT_ID, chat.getChatId());
         return namedParamJdbcTemplate.query(sqlQuery, map, new ChatToLinkRowMapper());
     }
 
     public List<ChatToLink> getAllChatsByLink(String link) {
         String sqlQuery = "SELECT *  FROM chat_to_link WHERE link = :link";
         Map<String, Object> map = new HashMap<>();
-        map.put("link", link);
+        map.put(LINK, link);
         return namedParamJdbcTemplate.query(sqlQuery, map, new ChatToLinkRowMapper());
     }
 }

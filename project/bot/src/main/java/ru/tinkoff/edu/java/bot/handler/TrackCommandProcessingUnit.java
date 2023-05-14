@@ -1,7 +1,9 @@
 package ru.tinkoff.edu.java.bot.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class TrackCommandProcessingUnit implements CommandProcessingUnit {
 
@@ -10,7 +12,7 @@ public class TrackCommandProcessingUnit implements CommandProcessingUnit {
         if (!messageText.equals("/track")) {
             return null;
         }
-        System.out.println("attempt use unfinished command \"/track\"");
+        log.info("attempt use unfinished command \"/track\"");
         return "sorry, feature \"track\" is under construction";
     }
 }

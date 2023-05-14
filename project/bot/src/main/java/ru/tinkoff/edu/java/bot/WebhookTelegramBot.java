@@ -30,10 +30,11 @@ public class WebhookTelegramBot extends TelegramWebhookBot {
     private final TelegramBotService telegramBotService;
     private final UpdateProcessService updateProcessService;
 
-    public WebhookTelegramBot(@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") TelegramBotConfig telegramBotConfig,
-                              TelegramBotService telegramBotService,
-                              List<BotCommand> botCommands,
-                              UpdateProcessService updateProcessService) {
+    public WebhookTelegramBot(
+            @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") TelegramBotConfig telegramBotConfig,
+            TelegramBotService telegramBotService,
+            List<BotCommand> botCommands,
+            UpdateProcessService updateProcessService) {
         super(telegramBotConfig.token());
         this.telegramBotConfig = telegramBotConfig;
 
@@ -41,7 +42,8 @@ public class WebhookTelegramBot extends TelegramWebhookBot {
             this.execute(new SetMyCommands(botCommands, new BotCommandScopeDefault(), null));
             this.execute(SetWebhook.builder().url(telegramBotConfig.webhookPath()).build());
         } catch (TelegramApiException e) {
-            System.out.println("Error setting bot's command list: " + e.getMessage());
+            log.error("Error setting bot's command list: "
+                              + e.getMessage());
         }
 
         this.telegramBotService = telegramBotService;
@@ -63,10 +65,10 @@ public class WebhookTelegramBot extends TelegramWebhookBot {
     @PostMapping("/update")
     public void processUpdate(@RequestBody LinkUpdate linkUpdate) {
         Map<String, String> processedUpdate = updateProcessService.processUpdate(linkUpdate);
-        String logMessage = "\nTelegram chat with id=" +
-                processedUpdate.get(updateProcessService.TG_CHAT_ID) +
-                " has following updates:\n" +
-                processedUpdate.get(updateProcessService.MESSAGE);
+        String logMessage = "\nTelegram chat with id="
+                + processedUpdate.get(UpdateProcessService.TG_CHAT_ID)
+                + " has following updates:\n"
+                + processedUpdate.get(UpdateProcessService.MESSAGE);
         log.info(logMessage);
     }
 

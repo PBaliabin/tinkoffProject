@@ -18,7 +18,8 @@ public class ErrorHandler {
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErrorResponse badRequestException(BadRequestException badRequestException) {
-        return new ApiErrorResponse("This is bad request response description",
+        return new ApiErrorResponse(
+                "This is bad request response description",
                 "400",
                 "BadRequestException",
                 "Что-то пошло не по плану",
@@ -31,7 +32,8 @@ public class ErrorHandler {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiErrorResponse notFoundException(NotFoundException notFoundException) {
-        return new ApiErrorResponse("This is not found response description",
+        return new ApiErrorResponse(
+                "This is not found response description",
                 "404",
                 "NotFoundException",
                 "Запрашиваемый элемент не был найден",

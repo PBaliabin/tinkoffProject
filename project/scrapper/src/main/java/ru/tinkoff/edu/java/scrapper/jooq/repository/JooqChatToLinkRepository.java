@@ -25,7 +25,7 @@ public class JooqChatToLinkRepository {
         dslContext
                 .deleteFrom(chatToLinkTable)
                 .where(chatToLinkTable.LINK.eq(chatToLink.getLink())
-                        .and(chatToLinkTable.CHAT_ID.eq(chatToLink.getChatId())))
+                                           .and(chatToLinkTable.CHAT_ID.eq(chatToLink.getChatId())))
                 .execute();
     }
 

@@ -6,3 +6,4 @@ project/scrapper/target/
 project/project.iml
 project/scrapper/src/main/java/ru/tinkoff/edu/java/scrapper/domain/
 project/scrapper-jooq/target/
+project/target/

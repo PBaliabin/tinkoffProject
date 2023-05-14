@@ -204,10 +204,10 @@
                 <artifactId>jooq</artifactId>
                 <version>${org.jooq.version}</version>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.jooq/jooq-codegen -->
+            <!-- https://mvnrepository.com/artifact/org.jooq/jooq-app.codegen -->
             <dependency>
                 <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen</artifactId>
+                <artifactId>jooq-app.codegen</artifactId>
                 <version>${org.jooq.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.jooq/jooq-meta-extensions-liquibase -->
@@ -288,6 +288,33 @@
                     <groupId>org.liquibase</groupId>
                     <artifactId>liquibase-maven-plugin</artifactId>
                     <version>${liquibase.version}}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.2.2</version>
+                    <configuration>
+                        <configLocation>checkstyle.xml</configLocation>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>
+                                validate
+                            </phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <!-- https://mvnrepository.com/artifact/com.puppycrawl.tools/checkstyle -->
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>10.3</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
 
             </plugins>

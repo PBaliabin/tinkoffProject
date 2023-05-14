@@ -7,8 +7,6 @@ import ru.tinkoff.edu.java.scrapper.dto.LinkUpdate;
 import ru.tinkoff.edu.java.scrapper.inteface.client.TgBotClient;
 import ru.tinkoff.edu.java.scrapper.inteface.service.MessageService;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @ConditionalOnProperty(prefix = "app", name = "use-queue", havingValue = "false")

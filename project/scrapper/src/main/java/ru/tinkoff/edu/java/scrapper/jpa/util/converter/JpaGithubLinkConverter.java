@@ -11,7 +11,9 @@ import java.sql.Timestamp;
 @Slf4j
 @Component
 public class JpaGithubLinkConverter {
-    public ru.tinkoff.edu.java.scrapper.jpa.entity.GithubLink makeGithubLink(String link, GitHubResponse gitHubResponse) {
+    public ru.tinkoff.edu.java.scrapper.jpa.entity.GithubLink makeGithubLink(
+            String link,
+            GitHubResponse gitHubResponse) {
         long newUpdateTime = 0L;
         try {
             newUpdateTime = DateUtil.provideDateFormat().parse(gitHubResponse.getUpdatedAt()).getTime();

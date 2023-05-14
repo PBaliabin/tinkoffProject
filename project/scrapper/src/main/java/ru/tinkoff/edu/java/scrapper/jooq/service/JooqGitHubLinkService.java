@@ -2,12 +2,12 @@ package ru.tinkoff.edu.java.scrapper.jooq.service;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.GithubLinkRecord;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.inteface.service.GithubLinkService;
 import ru.tinkoff.edu.java.scrapper.jooq.repository.JooqGithubLinkRepository;
 import ru.tinkoff.edu.java.scrapper.jooq.util.converter.JooqGithubLinkConverter;
+import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
 
 import java.net.URI;
 import java.time.LocalDateTime;

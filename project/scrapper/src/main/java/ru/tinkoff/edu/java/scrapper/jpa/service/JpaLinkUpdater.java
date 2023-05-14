@@ -2,9 +2,6 @@ package ru.tinkoff.edu.java.scrapper.jpa.service;
 
 import lombok.RequiredArgsConstructor;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.inteface.service.MessageService;
-import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
-import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 import ru.tinkoff.edu.java.scrapper.dto.LinkUpdate;
 import ru.tinkoff.edu.java.scrapper.dto.response.GitHubResponse;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
@@ -17,9 +14,17 @@ import ru.tinkoff.edu.java.scrapper.jpa.entity.GithubLink;
 import ru.tinkoff.edu.java.scrapper.jpa.entity.StackoverflowLink;
 import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaGithubLinkConverter;
 import ru.tinkoff.edu.java.scrapper.jpa.util.converter.JpaStackoverflowLinkConverter;
+import ru.tinkoff.edu.java.scrapper.service.GitHubClientService;
+import ru.tinkoff.edu.java.scrapper.service.StackOverflowClientService;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public class JpaLinkUpdater implements LinkUpdater {
@@ -30,17 +35,18 @@ public class JpaLinkUpdater implements LinkUpdater {
 
     private final GitHubClientService gitHubClientService;
     private final StackOverflowClientService stackOverflowClientService;
-    private final MessageService messageService;
 
     private final JpaGithubLinkConverter jpaGithubLinkConverter;
     private final JpaStackoverflowLinkConverter jpaStackoverflowLinkConverter;
 
     @Override
-    public int update(LocalDateTime checkTimeThreshold) {
-        List<GithubLink> githubLinks = (List<GithubLink>) jpaGithubLinkService.getLinksByLastCheckTime(checkTimeThreshold);
-        List<StackoverflowLink> stackoverflowLinks = (List<StackoverflowLink>) jpaStackoverflowLinkService.getLinksByLastCheckTime(checkTimeThreshold);
+    public Collection<LinkUpdate> update(LocalDateTime checkTimeThreshold) {
+        List<GithubLink> githubLinks = (List<GithubLink>) jpaGithubLinkService.getLinksByLastCheckTime(
+                checkTimeThreshold);
+        List<StackoverflowLink> stackoverflowLinks =
+                (List<StackoverflowLink>) jpaStackoverflowLinkService.getLinksByLastCheckTime(
+                        checkTimeThreshold);
 
-        int linksWithUpdateCount = 0;
         Map<Long, List<GithubLink>> outdatedGithubLinks = new HashMap<>();
         Map<Long, List<GithubLink>> updatedGithubLinks = new HashMap<>();
         Map<Long, List<StackoverflowLink>> updatedStackoverflowLinks = new HashMap<>();
@@ -54,23 +60,28 @@ public class JpaLinkUpdater implements LinkUpdater {
 
             GithubLink updatedGithubLink = jpaGithubLinkConverter.makeGithubLink(githubLink.getLink(), gitHubResponse);
 
-            if (!Objects.equals(githubLink.getForksCount(), updatedGithubLink.getForksCount()) ||
+            if (!Objects.equals(githubLink.getForksCount(), updatedGithubLink.getForksCount())
+                    ||
                     !Objects.equals(githubLink.getOpenIssuesCount(), updatedGithubLink.getOpenIssuesCount())) {
-                List<ChatToLink> chatsByLink = (List<ChatToLink>) jpaChatToLinkService.getChatsByLink(githubLink.getLink());
+                List<ChatToLink> chatsByLink =
+                        (List<ChatToLink>) jpaChatToLinkService.getChatsByLink(githubLink.getLink());
                 for (ChatToLink chatToLink : chatsByLink) {
 
-                    List<GithubLink> outdatedGithubLinksList = outdatedGithubLinks.getOrDefault(chatToLink.getChatId(), new ArrayList<>());
+                    List<GithubLink> outdatedGithubLinksList = outdatedGithubLinks.getOrDefault(
+                            chatToLink.getChatId(),
+                            new ArrayList<>());
                     outdatedGithubLinksList.add(githubLink);
                     outdatedGithubLinks.put(chatToLink.getChatId(), outdatedGithubLinksList);
 
-                    List<GithubLink> updatedLinksList = updatedGithubLinks.getOrDefault(chatToLink.getChatId(), new ArrayList<>());
+                    List<GithubLink> updatedLinksList = updatedGithubLinks.getOrDefault(
+                            chatToLink.getChatId(),
+                            new ArrayList<>());
                     updatedLinksList.add(updatedGithubLink);
                     updatedGithubLinks.put(chatToLink.getChatId(), updatedLinksList);
                 }
             }
 
             jpaGithubLinkService.update(updatedGithubLink);
-            linksWithUpdateCount++;
         }
 
         for (StackoverflowLink stackoverflowLink : stackoverflowLinks) {
@@ -80,30 +91,38 @@ public class JpaLinkUpdater implements LinkUpdater {
                     parsedLink.get(StackoverflowLinkService.SITE_STACKOVERFLOW)
             );
 
-            StackoverflowLink updatedStackoverflowLink = jpaStackoverflowLinkConverter.makeStackoverflowLink(stackoverflowLink.getLink(), stackoverflowResponse);
+            StackoverflowLink updatedStackoverflowLink = jpaStackoverflowLinkConverter.makeStackoverflowLink(
+                    stackoverflowLink.getLink(),
+                    stackoverflowResponse);
 
-            if (!Objects.equals(stackoverflowLink.getIsAnswered(), updatedStackoverflowLink.getIsAnswered()) ||
+            if (!Objects.equals(stackoverflowLink.getIsAnswered(), updatedStackoverflowLink.getIsAnswered())
+                    ||
                     !Objects.equals(stackoverflowLink.getAnswerCount(), updatedStackoverflowLink.getAnswerCount())) {
-                List<ChatToLink> chatsByLink = (List<ChatToLink>) jpaChatToLinkService.getChatsByLink(stackoverflowLink.getLink());
+                List<ChatToLink> chatsByLink =
+                        (List<ChatToLink>) jpaChatToLinkService.getChatsByLink(stackoverflowLink.getLink());
                 for (ChatToLink chatToLink : chatsByLink) {
 
-                    List<StackoverflowLink> outdatedStackoverflowLinksList = outdatedStackoverflowLinks.getOrDefault(chatToLink.getChatId(), new ArrayList<>());
+                    List<StackoverflowLink> outdatedStackoverflowLinksList = outdatedStackoverflowLinks.getOrDefault(
+                            chatToLink.getChatId(),
+                            new ArrayList<>());
                     outdatedStackoverflowLinksList.add(stackoverflowLink);
                     outdatedStackoverflowLinks.put(chatToLink.getChatId(), outdatedStackoverflowLinksList);
 
-                    List<StackoverflowLink> updatedStackoverflowLinksList = updatedStackoverflowLinks.getOrDefault(chatToLink.getChatId(), new ArrayList<>());
+                    List<StackoverflowLink> updatedStackoverflowLinksList = updatedStackoverflowLinks.getOrDefault(
+                            chatToLink.getChatId(),
+                            new ArrayList<>());
                     updatedStackoverflowLinksList.add(updatedStackoverflowLink);
                     updatedStackoverflowLinks.put(chatToLink.getChatId(), updatedStackoverflowLinksList);
                 }
             }
 
             jpaStackoverflowLinkService.update(updatedStackoverflowLink);
-            linksWithUpdateCount++;
         }
 
         Set<Long> tgChatIds = outdatedGithubLinks.keySet();
+        List<LinkUpdate> linkUpdates = new ArrayList<>();
         for (Long tgChatId : tgChatIds) {
-            messageService.send(new LinkUpdate(
+            linkUpdates.add(new LinkUpdate(
                     tgChatId,
                     outdatedGithubLinks
                             .get(tgChatId)
@@ -127,6 +146,6 @@ public class JpaLinkUpdater implements LinkUpdater {
                             .toList()
             ));
         }
-        return linksWithUpdateCount;
+        return linkUpdates;
     }
 }

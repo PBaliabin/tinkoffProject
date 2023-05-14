@@ -2,13 +2,16 @@ package ru.tinkoff.edu.java.scrapper.jpa.util.converter;
 
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.scrapper.dto.response.StackoverflowResponse;
+import ru.tinkoff.edu.java.scrapper.jpa.entity.StackoverflowLink;
 
 import java.sql.Timestamp;
 
 @Component
 public class JpaStackoverflowLinkConverter {
-    public ru.tinkoff.edu.java.scrapper.jpa.entity.StackoverflowLink makeStackoverflowLink(String link, StackoverflowResponse stackoverflowResponse) {
-        return new ru.tinkoff.edu.java.scrapper.jpa.entity.StackoverflowLink(
+    public StackoverflowLink makeStackoverflowLink(
+            String link,
+            StackoverflowResponse stackoverflowResponse) {
+        return new StackoverflowLink(
                 link,
                 stackoverflowResponse.getQuotaMax(),
                 stackoverflowResponse.getQuotaRemaining(),
@@ -19,7 +22,8 @@ public class JpaStackoverflowLinkConverter {
         );
     }
 
-    public ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink convertJpaStackoverflowLinkToCustom(ru.tinkoff.edu.java.scrapper.jpa.entity.StackoverflowLink stackoverflowLink) {
+    public ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink convertJpaStackoverflowLinkToCustom(
+            StackoverflowLink stackoverflowLink) {
         return new ru.tinkoff.edu.java.scrapper.dto.entity.StackoverflowLink(
                 stackoverflowLink.getLink(),
                 stackoverflowLink.getQuotaMax(),
