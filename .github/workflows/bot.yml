@@ -58,7 +58,7 @@ jobs:
         with:
           images: | 
             pash7e7/tinkoff-project-bot-image
-            ghcr.io/${{ github.repository }}
+            ghcr.io/tinkoff-project-bot-image
 
       - name: Push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
